@@ -1193,15 +1193,24 @@ function init() {
   document.getElementById('digest-overlay').addEventListener('click', closeDigest);
   document.getElementById('digest-copy-btn').addEventListener('click', () => {
     const text = document.getElementById('digest-preview').textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('digest-copy-btn');
+    const html = buildDigestHtml();
+    const btn  = document.getElementById('digest-copy-btn');
+    const markCopied = () => {
       btn.textContent = 'Copied!';
       btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copy for Substack';
-        btn.classList.remove('copied');
-      }, 2000);
-    });
+      setTimeout(() => { btn.textContent = 'Copy for Substack'; btn.classList.remove('copied'); }, 2000);
+    };
+    try {
+      const item = new ClipboardItem({
+        'text/html':  new Blob([html], { type: 'text/html' }),
+        'text/plain': new Blob([text], { type: 'text/plain' }),
+      });
+      navigator.clipboard.write([item]).then(markCopied).catch(() => {
+        navigator.clipboard.writeText(text).then(markCopied);
+      });
+    } catch (e) {
+      navigator.clipboard.writeText(text).then(markCopied);
+    }
   });
 
   // Glossary popup: swallow all clicks so they don't bubble to outsideClose/outsideBriefClose
@@ -2177,6 +2186,103 @@ function buildDigestText() {
   lines.push('Environmental Commodity Intelligence');
 
   return lines.join('\n');
+}
+
+// ── Digest HTML (for clipboard rich-text paste into Substack) ──
+// Glossary terms are hyperlinked to carbonsnaps.com (first occurrence only).
+// TODO: swap href to https://carbonsnaps.com/glossary#<slug> once a glossary page exists.
+function linkifyDigest(rawText) {
+  if (!rawText) return escHtml(rawText);
+  const pairs = [];
+  GLOSSARY_TERMS.forEach(entry => {
+    entry.aliases.forEach(alias => { pairs.push({ alias, term: entry.term }); });
+  });
+  pairs.sort((a, b) => b.alias.length - a.alias.length);
+  let text = escHtml(rawText);
+  const linked = new Set();
+  pairs.forEach(({ alias, term }) => {
+    if (linked.has(term)) return;
+    const esc = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re  = new RegExp('(?<![\\w-])(' + esc + ')(?![\\w-])', 'i');
+    if (re.test(text)) {
+      text = text.replace(re, (_m, match) => {
+        linked.add(term);
+        return '<a href="https://carbonsnaps.com" style="color:#00c896;text-decoration:underline">' + match + '</a>';
+      });
+    }
+  });
+  return text;
+}
+
+function buildDigestHtml() {
+  const meta  = DATA._meta || {};
+  const built = meta.generated || new Date().toISOString().slice(0, 10);
+  const builtDate = new Date(built + 'T00:00:00');
+  const titleDate = builtDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  const esc = escHtml;
+  const p   = (s) => '<p>' + s + '</p>';
+  const hr  = '<hr style="border:none;border-top:1px solid #ccc;margin:16px 0">';
+  const parts = [];
+
+  parts.push('<h1>' + esc('CARBONsnaps \u2014 ' + titleDate) + '</h1>');
+  const firstCard = ((DATA.globalStories && DATA.globalStories.cards) || [])[0];
+  if (firstCard && (firstCard.headline || firstCard.label)) {
+    parts.push('<h2>' + esc(firstCard.headline || firstCard.label) + '</h2>');
+  }
+  parts.push(hr);
+
+  // Global stories
+  const cards = (DATA.globalStories && DATA.globalStories.cards) || [];
+  if (cards.length) {
+    parts.push('<h3>THIS WEEK</h3>');
+    cards.forEach(card => {
+      parts.push('<h4>' + esc(card.headline || card.label || '') + '</h4>');
+      parts.push(p(linkifyDigest(card.body || '')));
+      if (card.source) parts.push('<p><em>Source: ' + esc(card.source) + '</em></p>');
+    });
+    parts.push(hr);
+  }
+
+  // Changelog
+  const cl = (DATA.regulatory && DATA.regulatory.changelog) || {};
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 7);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+  const recent = (cl.changes || []).filter(c => (c.week || '') >= cutoffStr);
+  if (recent.length) {
+    parts.push('<h3>WHAT CHANGED THIS WEEK</h3>');
+    const CHANGE_LABELS = { new_event:'New event', status:'Status change', date:'Date revised', direction:'Direction change', note:'Analyst note updated' };
+    recent.forEach(c => {
+      const what  = CHANGE_LABELS[c.change_type] || c.change_type;
+      const sig   = c.significance === 'high' ? ' <strong>[HIGH]</strong>' : c.significance === 'medium' ? ' [MED]' : '';
+      const fromTo = (c.from && c.to) ? '  ' + esc(c.from) + ' &rarr; ' + esc(c.to) : '';
+      parts.push(p('<strong>' + esc(c.id) + '  ' + esc(what) + '</strong>' + sig));
+      parts.push(p(esc(c.title) + fromTo));
+    });
+    parts.push(hr);
+  }
+
+  // Next 30 days
+  const upcoming = (DATA.regulatory && DATA.regulatory.events || [])
+    .map(ev => ({ ev, d: daysUntil(ev.next_date) }))
+    .filter(({ d }) => d !== null && d >= 0 && d <= 30)
+    .sort((a, b) => a.d - b.d);
+  if (upcoming.length) {
+    parts.push('<h3>COMING UP IN THE NEXT 30 DAYS</h3>');
+    upcoming.forEach(({ ev, d }) => {
+      const rel   = relativeLabel(d) || '';
+      const instr = Array.isArray(ev.instruments_affected)
+        ? ev.instruments_affected.join(', ')
+        : (ev.instruments_affected || '');
+      parts.push(p('<strong>' + esc(formatDisplayDate(ev.next_date)) + '  (' + esc(rel) + ')</strong>'));
+      parts.push(p(esc(ev.title) + (instr ? '  [' + esc(instr) + ']' : '') + '  ' + esc(ev.direction || '')));
+      if (ev.summary) parts.push(p(linkifyDigest(ev.summary)));
+    });
+    parts.push(hr);
+  }
+
+  parts.push(p('<a href="https://carbonsnaps.com" style="color:#00c896">CARBONsnaps</a> \u2014 Environmental Commodity Intelligence'));
+  return '<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:640px;margin:0 auto">' + parts.join('\n') + '</body></html>';
 }
 
 function openDigest() {
