@@ -1004,6 +1004,10 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
 </style>
 </head>
 <body>
+<script>
+  var p = prompt("Enter password:");
+  if (p !== "croc" && p !== "Croc") { document.body.innerHTML = "<p style=\"text-align:center;margin-top:20%;font-family:sans-serif;\">Access denied.</p>"; }
+</script>
 
 <!-- ── Top bar ── -->
 <div class="top-bar">
