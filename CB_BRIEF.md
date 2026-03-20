@@ -7,6 +7,7 @@
 ### Standard full refresh (new events added, content changed)
 
 ```bash
+cd ~/Downloads/CARBONsnaps
 python3 CB_diff.py --apply
 python3 CB_sync_regulatory.py --apply
 python3 CB_update_scenarios.py --apply --stale-only
@@ -16,6 +17,7 @@ python3 CB_build.py && open index.html
 ### Cost-free rebuild (no new events, no content changes)
 
 ```bash
+cd ~/Downloads/CARBONsnaps
 python3 CB_diff.py --apply
 python3 CB_sync_regulatory.py --apply
 python3 CB_build.py && open index.html
@@ -26,6 +28,14 @@ python3 CB_build.py && open index.html
 ```bash
 python3 CB_build.py && open index.html
 ```
+
+### After any local build — push to live site
+
+```bash
+git add -A && git commit -m "daily refresh $(date +%Y-%m-%d)" && git push
+```
+
+Cloudflare Pages auto-deploys within ~1 minute of push.
 
 ### When to run each script
 
@@ -51,13 +61,13 @@ An event's scenarios are regenerated if ANY of:
 - 30 events × $0.10 = ~$3.00 for a full forced regeneration
 - Daily `--stale-only` builds: $0.00 if no content has changed
 
-### Build output confirmed working (2026-03-19)
+### Build output confirmed working (2026-03-20)
 
 ```
 Instruments      : 8/8
 Regulatory events: 30
-Changelog entries: 0 (first run — will populate as events change)
-Output           : index.html (262 KB)
+Changelog entries: 0
+Output           : index.html
 ```
 
 Known warnings (non-blocking, expected):
@@ -65,7 +75,55 @@ Known warnings (non-blocking, expected):
 - `[RIN] spark array is empty` — same
 - `[45Z] spark array is empty` — same
 - `[VCM] spark has only 3 points` — same
-- `git add failed: fatal: not a git repository` — project not yet under git; ignore or init repo
+
+---
+
+## Infrastructure — current state (updated 2026-03-20)
+
+### Hosting
+
+- **Live site**: `carbonsnaps.com` → Cloudflare Pages → GitHub repo `ralphlazar/CARBONsnaps`
+- **Deployment**: automatic on every `git push` to `master`
+- **Password gate**: `croc` / `Croc` — implemented in `CB_carbonsnaps-shell.html` so it survives rebuilds
+- **Subscribe button**: in top bar, links to `carbonsnaps.substack.com`
+
+### Git
+
+- **Repo**: `github.com/ralphlazar/CARBONsnaps` (public)
+- **Branch**: `master`
+- **Local path**: `~/Downloads/CARBONsnaps`
+- **Remote**: `origin` → GitHub
+
+### Secrets / credentials
+
+- **`.env` location**: `~/Desktop/.env` — never inside project folder, never committed
+- **`.env` contents**:
+  - `ANTHROPIC_API_KEY` — Anthropic API key (revoked and replaced 2026-03-20)
+  - `REGULATORY_SHEET_ID=1Tvg30ZkRbomed3zVIx42DLcAAYVK9q50m4yX-hJwu68`
+  - `PRICE_HISTORY_SHEET_ID` — not yet set up
+  - `FRED_API_KEY` — not yet added (needed by CARBONsnaps; add when scripts use it)
+- **Google service account**: `carbonsnaps-sheets@carbonsnaps.iam.gserviceaccount.com`
+  - Key file: `CB_market-stats-key.json` in project folder — gitignored
+  - Google Cloud project: `CARBONsnaps` (project ID: `carbonsnaps`)
+  - Sheets API enabled on this project
+  - Service account has Editor access to the regulatory Google Sheet
+- **`CB_update_scenarios.py`** reads `.env` from `Path.home() / "Desktop" / ".env"` — updated 2026-03-20
+
+### Domain
+
+- **Registrar**: Cloudflare (`carbonsnaps.com` registered 2026-03-20)
+- **DNS**: managed by Cloudflare
+- `carbonsnaps.com` → Cloudflare Pages (CNAME record, active)
+- `www.carbonsnaps.com` → Cloudflare Pages (active)
+- `newsletter.carbonsnaps.com` — not yet set up (deferred — Substack charges $50 for custom domain; revisit when subscriber count justifies)
+
+### Substack
+
+- **Account**: `ralphlazar` (personal author account, spans all projects)
+- **Publication**: CARBONsnaps at `carbonsnaps.substack.com`
+- **First post published**: 2026-03-20
+- **Phase**: Manual digest — run build locally, click Digest button, copy, paste into Substack, add title/subtitle, publish
+- **Digest button**: localhost-only — visible when opening `index.html` as a local file, hidden on live site
 
 ---
 
@@ -137,15 +195,13 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 
 ## Pending items (priority order)
 
-1. **Substack subscribe button** — create Substack account, add subscribe button/embed to CARBONsnaps site. First task next session. See Substack/digest roadmap below.
+1. **Digest button improvements** — two fixes needed in `CB_carbonsnaps-shell.html` `buildDigestText()`:
+   - Auto-generate title (`CARBONsnaps — DD Month YYYY`) and subtitle (one-line summary of top story) at top of copied text
+   - Fix footer URL from `carbonsnaps.io` → `carbonsnaps.com`
 
-2. **Initialise git repo**: `cd ~/Downloads/CARBONsnaps && git init && git add . && git commit -m "init"`
+2. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds.
 
-3. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds.
-
-4. **Carbon markets primer** — "Carbon markets explained" section. Deferred — pocket until audience/product positioning is clearer. See also: `CB_market_relationships.html` built 2026-03-19.
-
-5. **GDP stories audit** for CAN, FRA, ITA, BRA — content session, deferred.
+3. **Carbon markets primer** — "Carbon markets explained" section. Deferred — pocket until audience/product positioning is clearer. See also: `CB_market_relationships.html` built 2026-03-19.
 
 ---
 
@@ -181,7 +237,21 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 - ✅ **Next 30 days strip** — compact digest of imminent events above the regulatory tracker. Same width as tracker (`max-width: 660px`). Red dot header, rows show date (red ≤14d, gold 15-30d), relative label, title, instruments, direction badge. Clicking row opens event detail tooltip. Absent when nothing in window. Respects instrument filter.
 - ✅ **Instrument filter** — single click on instrument row highlights it, dims others, filters regulatory tracker and next 30 days strip to that instrument's events. Green filter badge with ✕ Clear appears above tracker. Click same row again or Clear to reset. Double-click or shift-click opens instrument detail tooltip.
 - ✅ **Weather icon system fully removed** — `.wh-icon` CSS block removed. `sigEmoji()` and `emojiSignal()` functions removed. `signalToDir()` simplified: passes through direction words directly, retains legacy weather string map as silent fallback only. `_iconMap` removed from digest builder. `card.icon` removed from digest output.
-- ✅ **Email digest (Substack)** — `Digest` button in Regulatory Tracker section header generates formatted plain-text weekly digest: this week's stories, changelog entries, next 30 days events. "Copy for Substack" button copies to clipboard. **Localhost-only**: button hidden on GitHub Pages via `location.protocol === 'file:'` / `location.hostname` check. Public never sees it.
+- ✅ **Email digest (Substack)** — `Digest` button in Regulatory Tracker section header generates formatted plain-text weekly digest: this week's stories, changelog entries, next 30 days events. "Copy for Substack" button copies to clipboard. **Localhost-only**: button hidden on live site.
+
+## Completed items (session 2026-03-20)
+
+- ✅ **Git repo initialised** — `~/Downloads/CARBONsnaps` initialised, history clean of all secrets.
+- ✅ **API key secured** — old Anthropic key revoked. New key stored in `~/Desktop/.env`. `CB_update_scenarios.py` updated to read from `Path.home() / "Desktop" / ".env"`.
+- ✅ **Google credentials secured** — `CB_market-stats-key.json` added to `.gitignore`. Scrubbed from git history via `filter-branch`.
+- ✅ **GitHub repo live** — `github.com/ralphlazar/CARBONsnaps`, public, master branch.
+- ✅ **Cloudflare Pages hosting** — site live at `carbonsnaps.com` and `www.carbonsnaps.com`. Auto-deploys on push.
+- ✅ **Password gate** — `croc` / `Croc`, implemented in `CB_carbonsnaps-shell.html` so it survives rebuilds.
+- ✅ **Subscribe button** — in top bar, links to `carbonsnaps.substack.com`.
+- ✅ **Google Cloud project created** — project `CARBONsnaps`, Sheets API enabled, service account `carbonsnaps-sheets` created, key downloaded, sheet shared with service account.
+- ✅ **Substack account and publication** — account `ralphlazar`, publication CARBONsnaps at `carbonsnaps.substack.com`.
+- ✅ **First Substack post published** — "CARBONsnaps — 20 March 2026", 2026-03-20.
+- ✅ **Daily refresh ritual confirmed working** — all four scripts ran cleanly, site rebuilt and pushed.
 
 ---
 
@@ -265,26 +335,34 @@ Weekly digest generated from live dashboard data — stories, changelog, next 30
 
 ### Phase 1 — Manual (current)
 
-1. Run build, click Digest button (localhost only), copy text
-2. Paste into Substack editor, tidy, publish
-3. Add a simple "Subscribe" link on CARBONsnaps pointing to Substack page
+1. Run build locally, click Digest button (localhost only), copy text
+2. Add title and subtitle manually
+3. Paste into Substack editor, publish
 
-**First task next session: create Substack account + add subscribe button to the site.**
+### Weekly publishing workflow
 
-### Phase 2 — Embedded subscribe form
+1. `cd ~/Downloads/CARBONsnaps`
+2. Run daily refresh ritual (diff → sync → scenarios → build)
+3. `open index.html` — click Digest button — Copy for Substack
+4. Go to `carbonsnaps.substack.com/publish/home` → Create → Article
+5. Paste content, add title (`CARBONsnaps — DD Month YYYY`) and subtitle
+6. Publish → Everyone → Publish now
+7. `git add -A && git commit -m "daily refresh YYYY-MM-DD" && git push`
 
-Replace the outbound link with an email capture form embedded directly on CARBONsnaps. Substack provides embed code — one paste job. Readers subscribe without leaving the site.
+### Phase 2 — Digest button auto-generates title/subtitle (next session)
+
+Fix `buildDigestText()` in shell to prepend:
+- Title: `CARBONsnaps — DD Month YYYY`
+- Subtitle: derived from first story headline
+- Footer URL: `carbonsnaps.com` (not `carbonsnaps.io`)
 
 ### Phase 3 — Automated send (later)
 
-Build pipeline generates digest and pushes to Substack via API. Review and send. Eventually fully automated.
+Build pipeline generates digest and pushes to Substack via API.
 
-### Platform choice: Substack
+### Platform
 
-- Free to start, 10% of subscription revenue
-- Built-in discovery network helps early growth
-- Simple editor — plain text paste works well
-- Switch to Beehiiv later if subscriber count justifies more tooling
+Substack free tier. 10% of subscription revenue when paid tiers enabled. Switch to Beehiiv if subscriber count justifies more tooling.
 
 ---
 

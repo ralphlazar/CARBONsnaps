@@ -2101,11 +2101,16 @@ function buildDigestText() {
   const built = meta.generated || new Date().toISOString().slice(0, 10);
   const lines = [];
 
-  // Header
-  lines.push('CARBONsnaps — Weekly Regulatory Digest');
-  lines.push(built);
+  // Header — title: "CARBONsnaps — DD Month YYYY", subtitle: first story headline
+  const builtDate = new Date(built + 'T00:00:00');
+  const titleDate = builtDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  lines.push('CARBONsnaps \u2014 ' + titleDate);
+  const firstCard = ((DATA.globalStories && DATA.globalStories.cards) || [])[0];
+  if (firstCard && (firstCard.headline || firstCard.label)) {
+    lines.push(firstCard.headline || firstCard.label);
+  }
   lines.push('');
-  lines.push('─────────────────────────────────────────');
+  lines.push('\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500');
   lines.push('');
 
   // Global stories
@@ -2168,7 +2173,7 @@ function buildDigestText() {
     lines.push('');
   }
 
-  lines.push('CARBONsnaps — carbonsnaps.io');
+  lines.push('CARBONsnaps \u2014 carbonsnaps.com');
   lines.push('Environmental Commodity Intelligence');
 
   return lines.join('\n');
