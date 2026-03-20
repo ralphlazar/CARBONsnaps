@@ -1,0 +1,267 @@
+{
+  "_meta": {
+    "generated": "2026-03-18",
+    "version": "1.0",
+    "note": "CARBONsnaps data. Instrument prices and stories updated weekly. Regulatory tracker updated continuously.",
+    "tier_guide": {
+      "daily": "Update every trading day — spot prices, spreads",
+      "weekly": "Update weekly — price consensus, regulatory signals, stories",
+      "structural": "Update on major regulatory decision or market structure change"
+    },
+    "built_at": "2026-03-18 13:58"
+  },
+  "instruments": [
+    {
+      "id": "EUA",
+      "name": "EU Allowances",
+      "short": "EUA",
+      "market": "Compliance",
+      "jurisdiction": "EU",
+      "description": "European Union Emissions Trading System allowances. Each permit covers one tonne of CO2. The world's largest carbon market.",
+      "price": "65.20",
+      "price_unit": "EUR/tonne",
+      "change_1w": "+1.2%",
+      "change_1m": "-3.4%",
+      "change_3m": "+8.1%",
+      "regulatory_signal": "cloudy",
+      "regulatory_note": "Market Stability Reserve review ongoing. Outcome expected Q3 2026.",
+      "last_updated": "2026-03-18",
+      "story": {
+        "beginner": "EU carbon permits trade around 65 euros per tonne. These permits let companies emit one tonne of CO2 and are required by law across the EU. Prices have risen sharply over the past three years as the EU tightens supply to meet its 2030 climate targets.",
+        "moderate": "EUAs are trading at 65.20 EUR/tonne, recovering from a Q4 dip driven by mild winter weather reducing energy demand. The Market Stability Reserve review is the key near-term variable: if the EU accelerates supply withdrawal, prices could retest the 70 EUR level. Demand from industrial emitters remains steady, with the CBAM phase-in beginning to close the competitive gap for EU manufacturers.",
+        "expert": "EUAs at 65.20 EUR/tonne reflect a market balancing structural supply tightening against cyclical demand softness from industrial slowdown. The MSR review introduces meaningful upside optionality: an accelerated intake rate would reduce the surplus by an estimated 200-300Mt over 2026-27, implying 8-12 EUR of price support at current demand. CBAM full implementation in 2026 adds a structural demand floor as importers begin purchasing certificates. Key risk: recession-driven demand destruction, which knocked 15 EUR off prices in H2 2023."
+      },
+      "value_at_generation": "65.20",
+      "spark": []
+    },
+    {
+      "id": "CCA",
+      "name": "California Carbon Allowances",
+      "short": "CCA",
+      "market": "Compliance",
+      "jurisdiction": "California",
+      "description": "California Cap-and-Trade allowances under the CARB program. Covers ~85% of California GHG emissions.",
+      "price": "29.50",
+      "price_unit": "USD/tonne",
+      "change_1w": "-0.8%",
+      "change_1m": "+2.1%",
+      "change_3m": "+5.3%",
+      "regulatory_signal": "cloudy",
+      "regulatory_note": "2026 cap adjustment under CARB review. Floor price mechanism provides downside support.",
+      "last_updated": "2026-03-18",
+      "story": {
+        "beginner": "California carbon permits cost around 29.50 dollars per tonne. California runs the most active carbon market in the US, requiring large polluters to hold permits for every tonne of CO2 they emit. Prices have a government-set floor, which limits how far they can fall.",
+        "moderate": "CCAs are trading at 29.50 USD/tonne, near the lower end of the recent range. CARB's price floor mechanism ($22.86 in 2026, rising 5% annually) limits downside. The 2026 cap adjustment review is the key catalyst to watch: CARB is considering steepening the post-2030 reduction trajectory, which would tighten supply and push prices higher. Linkage with Quebec's carbon market adds a cross-border liquidity dimension.",
+        "expert": "CCAs at 29.50 USD/tonne are trading with a compressed risk premium relative to the structural supply trajectory. CARB's floor price ($22.86, +5% per year) creates an asymmetric return profile: downside limited to ~22% from spot, upside uncapped if CARB accelerates the post-2030 glide path. The 2026 cap adjustment scoping document suggests CARB is considering a 55-65% reduction target by 2035 vs the current 40% by 2030 trajectory. That revision would represent a step-change in the supply/demand balance from 2028 onwards."
+      },
+      "value_at_generation": "29.50",
+      "spark": []
+    },
+    {
+      "id": "UKA",
+      "name": "UK Allowances",
+      "short": "UKA",
+      "market": "Compliance",
+      "jurisdiction": "UK",
+      "description": "UK Emissions Trading Scheme allowances. Launched in 2021 post-Brexit as a standalone system.",
+      "price": "33.80",
+      "price_unit": "GBP/tonne",
+      "change_1w": "+0.4%",
+      "change_1m": "-1.9%",
+      "change_3m": "+3.7%",
+      "regulatory_signal": "cloudy",
+      "regulatory_note": "UK-EU ETS linking feasibility study due 2026. Outcome would significantly affect pricing.",
+      "last_updated": "2026-03-18",
+      "story": {
+        "beginner": "UK carbon permits trade at around 33.80 pounds per tonne. The UK launched its own carbon market after leaving the EU. Prices track the EU market loosely but diverge based on UK-specific policy decisions and energy market conditions.",
+        "moderate": "UKAs at 33.80 GBP/tonne have underperformed EUAs since the UK ETS launched, reflecting a structurally looser supply profile and policy uncertainty. The key variable for 2026 is the UK-EU ETS linking study: if linking proceeds, UKAs would converge toward EUA prices (implying significant upside at current levels). The UK government's supply adjustment consultation is also active, with a decision expected H2 2026.",
+        "expert": "UKAs trade at a persistent discount to EUAs (approximately 15-20% on an FX-adjusted basis), reflecting structural oversupply in the UK system and a lower ambition trajectory relative to EU 2030 targets. The linking study is the highest-magnitude optionality event in this market: full linking would eliminate the discount and add approximately 10-15 GBP to UKA prices at current EUA levels. Political risk is meaningful given the sensitivity of energy costs in UK political discourse. Short UKA/long EUA remains the structural trade for funds with cross-jurisdictional mandates."
+      },
+      "value_at_generation": "33.80",
+      "spark": []
+    },
+    {
+      "id": "CORSIA",
+      "name": "CORSIA Credits",
+      "short": "CORSIA",
+      "market": "Compliance",
+      "jurisdiction": "ICAO",
+      "description": "Carbon Offsetting and Reduction Scheme for International Aviation. ICAO-governed global mechanism requiring airlines to offset emissions growth above 2019 baseline.",
+      "price": "6.40",
+      "price_unit": "USD/tonne",
+      "change_1w": "+0.2%",
+      "change_1m": "+4.9%",
+      "change_3m": "+12.3%",
+      "regulatory_signal": "sunny",
+      "regulatory_note": "Phase 1 demand growing as aviation recovers. Eligible fuels criteria update expected mid-2026.",
+      "last_updated": "2026-03-18",
+      "story": {
+        "beginner": "CORSIA credits cost around 6.40 dollars per tonne. Airlines must buy these credits to offset the growth in their CO2 emissions above 2019 levels. As air travel keeps recovering from COVID lows, airlines need more credits, pushing prices higher.",
+        "moderate": "CORSIA credits at 6.40 USD/tonne have risen 12% over three months as aviation demand recovery drives offsetting obligations higher. Phase 1 (2024-2026) covers voluntary participants, with Phase 2 (2027+) becoming mandatory. The eligible fuels criteria update mid-2026 is worth watching: if ICAO broadens the list of qualifying credits, supply could increase and cap price appreciation. Supply is currently constrained by the narrow list of CORSIA-eligible credit types.",
+        "expert": "CORSIA Phase 1 demand is tracking above initial ICAO projections as RPK recovery exceeds the 2019 baseline faster than modelled. The credit price at 6.40 USD/tonne reflects a supply-constrained market: only CORSIA-eligible credits (predominantly Gold Standard and Verra credits meeting specific additionality criteria) qualify, limiting the supply pool to approximately 150-200Mt annually against growing demand. Phase 2 mandatory participation from 2027 introduces a structural demand step-change. The eligible fuels update is a binary event: expansion of qualifying methodologies could add 50-80Mt of supply, capping the price; a restrictive outcome tightens supply further."
+      },
+      "value_at_generation": "6.40",
+      "spark": []
+    },
+    {
+      "id": "LCFS",
+      "name": "California LCFS Credits",
+      "short": "LCFS",
+      "market": "Clean Fuel",
+      "jurisdiction": "California",
+      "description": "Low Carbon Fuel Standard credits generated by producing or blending fuels below California's carbon intensity benchmark.",
+      "price": "54.20",
+      "price_unit": "USD/credit",
+      "change_1w": "-2.1%",
+      "change_1m": "-8.3%",
+      "change_3m": "-15.6%",
+      "regulatory_signal": "stormy",
+      "regulatory_note": "Prices under pressure. CARB 2030 pathway consultation could reset the carbon intensity benchmark and restore credit value.",
+      "last_updated": "2026-03-18",
+      "story": {
+        "beginner": "California clean fuel credits have fallen to around 54 dollars each, down sharply over the past year. These credits reward companies that produce cleaner fuels. Falling prices mean the incentive to produce clean fuels is weakening, which is pushing CARB to consider a policy reset.",
+        "moderate": "LCFS credits at 54.20 USD are in a sustained downtrend, having peaked above 200 USD in 2022. The oversupply is structural: electric vehicle adoption has generated far more credits than CARB anticipated, flooding the market. CARB's 2030 carbon intensity pathway consultation is the critical catalyst. A more aggressive CI benchmark would make credits scarcer and more valuable. Without policy intervention, prices could continue drifting lower toward the 40-45 USD range.",
+        "expert": "LCFS credit prices at 54.20 USD reflect a market in structural oversupply driven by EV credit generation exceeding original modelling assumptions by approximately 3-4x. The CI benchmark has not been tightened to absorb this supply growth. CARB's 2030 pathway consultation offers two scenarios: a linear tightening (incrementally bullish, prices stabilise at 50-60 USD) or a step-change reset (sharply bullish, potential retest of 100+ USD). The consultation outcome is binary and represents the highest-magnitude near-term price catalyst in US clean fuel markets. Funds with long LCFS exposure should monitor the scoping document release, expected Q2 2026."
+      },
+      "value_at_generation": "54.20",
+      "spark": []
+    },
+    {
+      "id": "RIN",
+      "name": "Renewable Fuel Standard Credits",
+      "short": "RINs",
+      "market": "Clean Fuel",
+      "jurisdiction": "US-Federal",
+      "description": "Renewable Identification Numbers under the EPA Renewable Fuel Standard. D3 (cellulosic) and D6 (conventional ethanol) are the benchmark categories.",
+      "price": "0.68",
+      "price_unit": "USD/RIN (D6)",
+      "change_1w": "+1.5%",
+      "change_1m": "+3.0%",
+      "change_3m": "-4.2%",
+      "regulatory_signal": "cloudy",
+      "regulatory_note": "EPA 2026 volume obligations final rule pending. Obligated parties watching for RVO levels.",
+      "last_updated": "2026-03-18",
+      "story": {
+        "beginner": "RINs are credits that oil refiners must buy to prove they have blended enough renewable fuel into petrol and diesel. The D6 benchmark currently trades at around 68 cents. When the EPA sets higher blending requirements, refiners need more RINs and prices rise.",
+        "moderate": "D6 RINs at 0.68 USD are range-bound ahead of the EPA's 2026 Renewable Volume Obligation final rule. The RVO level is the primary price driver: a higher obligation requires refiners to surrender more RINs, tightening supply and pushing prices up. D3 (cellulosic) RINs command a significant premium at approximately 2.80 USD, reflecting scarcer supply from advanced biofuel producers. Small refinery exemptions remain a wildcard: if the EPA grants more exemptions, effective demand for RINs falls.",
+        "expert": "D6 RINs at 0.68 USD are trading at the lower end of the post-2022 range, reflecting ample ethanol production and carry-forward RIN bank balances. The 2026 RVO is the binary catalyst: EPA proposals released in Q4 2025 suggested a modest obligation increase, which the market has partially priced. Small refinery exemption volumes (totalling approximately 2.5bn gallons in recent years) remain a meaningful uncertainty. D3 RINs at 2.80 USD offer a more interesting risk/reward given the structural supply constraint on cellulosic fuel production and the political tailwinds for advanced biofuel mandates under current energy policy."
+      },
+      "value_at_generation": "0.68",
+      "spark": []
+    },
+    {
+      "id": "45Z",
+      "name": "45Z Clean Fuel Credits",
+      "short": "45Z",
+      "market": "Clean Fuel",
+      "jurisdiction": "US-Federal",
+      "description": "IRA-created production tax credit for clean transportation fuels. Replaces the Blenders Tax Credit from 2025. Value depends on the carbon intensity of the fuel produced.",
+      "price": "—",
+      "price_unit": "USD/gallon (variable)",
+      "change_1w": null,
+      "change_1m": null,
+      "change_3m": null,
+      "regulatory_signal": "stormy",
+      "regulatory_note": "IRS guidance finalisation pending. High uncertainty around credit calculation methodology and eligible fuel types.",
+      "last_updated": "2026-03-18",
+      "story": {
+        "beginner": "The 45Z credit is a new US government incentive that pays fuel producers for making cleaner transportation fuels. The cleaner the fuel, the larger the credit. It is still new and the exact rules are not fully finalised, creating uncertainty for fuel producers planning investments.",
+        "moderate": "45Z replaced the Blenders Tax Credit in 2025 and is structured as a production credit rather than a blending credit, shifting the incentive from blenders to producers. The credit value is inversely linked to carbon intensity: fuels below 50g CO2e per MJ qualify, with higher credits for lower-CI fuels. IRS guidance finalisation is the critical near-term event. Uncertainty around the GREET model update and international feedstock eligibility has delayed investment decisions across the sustainable aviation fuel and renewable diesel sectors.",
+        "expert": "45Z represents the most significant structural change to US clean fuel incentives since the RFS. As a CI-based production credit, it creates a direct link between carbon intensity scoring and credit value, incentivising feedstock optimisation rather than volume blending. The IRS guidance gap is creating material investment uncertainty: SAF producers using international feedstocks (HEFA-SPK from imported tallow, for example) have unresolved eligibility questions that affect project economics by 40-60 cents per gallon. Resolution of the GREET pathway question for international feedstocks is the single most important near-term clarification for the SAF investment market."
+      },
+      "value_at_generation": "—",
+      "spark": []
+    },
+    {
+      "id": "VCM",
+      "name": "Voluntary Carbon Credits",
+      "short": "VCM",
+      "market": "Voluntary",
+      "jurisdiction": "Global",
+      "description": "Nature-based voluntary carbon credits verified under Verra VCS or Gold Standard. REDD+, reforestation, and soil carbon project types. Prices vary by vintage, project type, and co-benefits.",
+      "price": "4.80",
+      "price_unit": "USD/tonne (nature-based avg)",
+      "change_1w": "+0.6%",
+      "change_1m": "+2.5%",
+      "change_3m": "+9.1%",
+      "regulatory_signal": "cloudy",
+      "regulatory_note": "Verra VM0042 REDD+ methodology update active. Article 6 bilateral agreements could redirect supply toward compliance markets.",
+      "last_updated": "2026-03-18",
+      "story": {
+        "beginner": "Voluntary carbon credits from nature-based projects like forests and wetlands trade at around 4.80 dollars per tonne. Companies buy these credits voluntarily to offset emissions not covered by regulation. Prices fell sharply in 2023-24 following quality concerns, but have been gradually recovering.",
+        "moderate": "Nature-based VCM credits at 4.80 USD/tonne have recovered from the 2023-24 lows driven by the Verra methodology controversy. The market is bifurcating: high-quality, co-benefit-rich credits (community forestry, verified biodiversity) command 8-15 USD premiums, while lower-quality avoided deforestation credits continue to trade near spot. Article 6 bilateral agreements are an emerging structural variable: credits absorbed into government-to-government transfers under Article 6.2 are removed from the voluntary market, tightening available supply.",
+        "expert": "VCM nature-based credits at 4.80 USD/tonne reflect a market rebuilding credibility after the 2023 quality crisis. The price recovery is selective: the Xpansiv CBL nature-based index masks significant dispersion between project types and vintages. The structural variable to watch is Article 6 absorption: as more bilateral agreements are signed and corresponding adjustments applied, REDD+ and ARR credits with Article 6 eligibility will command a significant premium over non-eligible credits. Firms like ECP with direct offtake relationships to high-quality project developers are structurally advantaged in this environment, as secondary market liquidity for premium credits is thin."
+      },
+      "value_at_generation": "4.80",
+      "spark": []
+    }
+  ],
+  "regulatory": {
+    "events": [],
+    "last_synced": null,
+    "stale_warnings": [],
+    "total_events": 0
+  },
+  "globalStories": {
+    "beginner": [
+      {
+        "icon": "☁️",
+        "label": "This Week's Signal",
+        "body": "Carbon markets are in a holding pattern this week, with most prices little changed ahead of key regulatory decisions in both the EU and California. Traders are waiting for clarity before making big moves.",
+        "source": "CARBONsnaps editorial"
+      },
+      {
+        "icon": "☁️",
+        "label": "Where It's Showing Up",
+        "body": "California's clean fuel credits (LCFS) continue to drift lower, while EU carbon allowances held steady. Voluntary carbon credits are quietly recovering as demand from corporate buyers picks up ahead of annual offset procurement cycles.",
+        "source": "CARBONsnaps editorial"
+      },
+      {
+        "icon": "☁️",
+        "label": "What It Means",
+        "body": "The divergence between falling US clean fuel prices and stable EU carbon prices reflects how differently policy is shaping these markets. In California, too many credits were created. In Europe, the rules are tightening supply deliberately.",
+        "source": "CARBONsnaps editorial"
+      }
+    ],
+    "moderate": [
+      {
+        "icon": "☁️",
+        "label": "This Week's Signal",
+        "body": "Environmental commodity markets are consolidating ahead of two major catalysts: the CARB LCFS 2030 pathway scoping document (expected Q2) and the EU MSR review outcome (expected Q3). Until those land, price action is likely to remain range-bound across most instruments.",
+        "source": "CARBONsnaps editorial"
+      },
+      {
+        "icon": "☁️",
+        "label": "Where It's Showing Up",
+        "body": "LCFS continued its downtrend at 54.20 USD, now down over 15% in three months. EUAs held at 65.20 EUR, with the MSR providing a technical floor. VCM nature-based credits nudged higher to 4.80 USD as Article 6 demand signals from two new bilateral agreements tighten eligible supply.",
+        "source": "CARBONsnaps editorial"
+      },
+      {
+        "icon": "☁️",
+        "label": "What It Means",
+        "body": "The LCFS slide and EUA stability tell a clear structural story: markets with active supply management (EU MSR) maintain pricing power, while markets that have not adjusted supply to absorb demand changes (California LCFS post-EV boom) drift lower until policy resets. The CARB consultation is the event to watch.",
+        "source": "CARBONsnaps editorial"
+      }
+    ],
+    "expert": [
+      {
+        "icon": "☁️",
+        "label": "This Week's Signal",
+        "body": "Markets are in pre-catalyst consolidation. The two binary events dominating positioning are the CARB LCFS 2030 CI benchmark reset (Q2 scoping document) and the EU MSR review intake rate decision (Q3). Both are asymmetric: upside on a hawkish outcome, limited downside given existing floor mechanisms.",
+        "source": "CARBONsnaps editorial"
+      },
+      {
+        "icon": "☁️",
+        "label": "Where It's Showing Up",
+        "body": "LCFS at 54.20 USD (-15.6% over three months) is pricing in continued structural oversupply without a CI benchmark reset. EUAs at 65.20 EUR are stable on MSR floor support. VCM nature-based at 4.80 USD is seeing selective buying in Article 6-eligible credits as bilateral agreement absorption tightens the premium end of the supply pool.",
+        "source": "CARBONsnaps editorial"
+      },
+      {
+        "icon": "☁️",
+        "label": "What It Means",
+        "body": "The dominant theme across this market is the divergence between policy-managed compliance instruments (EUA, CCA, CORSIA) and policy-neglected instruments (LCFS, lower-quality VCM). Active supply management creates investable price floors; the absence of it creates structural drift. Positioning ahead of the CARB consultation is the clearest near-term opportunity, with asymmetric upside on a step-change CI reset.",
+        "source": "CARBONsnaps editorial"
+      }
+    ]
+  }
+}

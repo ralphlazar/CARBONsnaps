@@ -1,0 +1,246 @@
+{
+  "generated": "2026-03-19",
+  "generated_at": "2026-03-19T22:45:16.811036+00:00",
+  "events": [
+    {
+      "event_id": "REG-001",
+      "title": "EU ETS Phase 4 Linear Reduction Factor increase",
+      "status": "Active",
+      "next_date": "01/01/2024",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-008",
+      "title": "CARB LCFS re-adoption and 2030 CI benchmark tightening",
+      "status": "Active",
+      "next_date": "01/01/2025",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-012",
+      "title": "IRS 45Z clean fuel production credit guidance",
+      "status": "Active",
+      "next_date": "01/01/2025",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-003",
+      "title": "CBAM definitive phase launch",
+      "status": "Upcoming",
+      "next_date": "01/01/2026",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-016",
+      "title": "EU ETS maritime 100% compliance phase-in",
+      "status": "Active",
+      "next_date": "01/01/2026",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-026",
+      "title": "EU ETS free allocation CBAM phase-out begins",
+      "status": "Active",
+      "next_date": "01/01/2026",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-004",
+      "title": "EU ETS 2 launch (buildings and road transport)",
+      "status": "Upcoming",
+      "next_date": "01/01/2027",
+      "direction": "Neutral",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-009",
+      "title": "CORSIA first mandatory phase (2024-2026)",
+      "status": "Active",
+      "next_date": "01/01/2027",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-022",
+      "title": "UK Carbon Border Adjustment Mechanism launch",
+      "status": "Upcoming",
+      "next_date": "01/01/2027",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-027",
+      "title": "UK ETS energy-from-waste voluntary monitoring phase",
+      "status": "Active",
+      "next_date": "01/01/2028",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-015",
+      "title": "California CCA auction reserve price adjustment 2026",
+      "status": "Active",
+      "next_date": "01/02/2026",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-018",
+      "title": "UK ETS maritime expansion launch",
+      "status": "Upcoming",
+      "next_date": "01/07/2026",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-020",
+      "title": "EU ETS post-2030 public consultation close",
+      "status": "Active",
+      "next_date": "04/05/2026",
+      "direction": "Neutral",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-017",
+      "title": "UK ETS Auction Reserve Price increase £22→£28",
+      "status": "Active",
+      "next_date": "08/04/2026",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-028",
+      "title": "California LCFS first full compliance year under amended regulation",
+      "status": "Active",
+      "next_date": "15/05/2027",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-013",
+      "title": "Article 6.4 carbon market rulebook finalisation",
+      "status": "Upcoming",
+      "next_date": "2026-COP31",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-006",
+      "title": "UK ETS cap review and tightening",
+      "status": "Upcoming",
+      "next_date": "2026-H1",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-010",
+      "title": "CORSIA eligible emissions unit standards review",
+      "status": "Upcoming",
+      "next_date": "2026-H1",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-014",
+      "title": "Verra VCS methodology review for REDD+ credits",
+      "status": "Active",
+      "next_date": "2026-H1",
+      "direction": "Bearish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-005",
+      "title": "UK-EU ETS linking feasibility study",
+      "status": "Upcoming",
+      "next_date": "2026-H2",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-007",
+      "title": "CARB Cap-and-Trade post-2030 rulemaking",
+      "status": "Upcoming",
+      "next_date": "2026-H2",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-024",
+      "title": "EU ETS aviation stop-the-clock expiry and CORSIA assessment",
+      "status": "Upcoming",
+      "next_date": "2026-H2",
+      "direction": "Mixed",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-011",
+      "title": "EPA Renewable Volume Obligation rulemaking 2026-2028",
+      "status": "Upcoming",
+      "next_date": "2026-Q2",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-002",
+      "title": "EU Market Stability Reserve review outcome",
+      "status": "Upcoming",
+      "next_date": "2026-Q3",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-019",
+      "title": "EU ETS post-2030 Commission revision proposal",
+      "status": "Upcoming",
+      "next_date": "2026-Q3",
+      "direction": "Mixed",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-023",
+      "title": "EU-UK ETS formal linking negotiations",
+      "status": "Active",
+      "next_date": "2026-Q4",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-021",
+      "title": "EU ETS annual surrender deadline (2025 emissions)",
+      "status": "Upcoming",
+      "next_date": "30/04/2026",
+      "direction": "Bullish",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-030",
+      "title": "COP31 — Belém, Brazil",
+      "status": "Upcoming",
+      "next_date": "30/11/2026",
+      "direction": "Mixed",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-025",
+      "title": "EU ETS Commission statutory review (July 2026)",
+      "status": "Upcoming",
+      "next_date": "31/07/2026",
+      "direction": "Mixed",
+      "note_version": null
+    },
+    {
+      "event_id": "REG-029",
+      "title": "CORSIA Phase 1 end and Phase 2 transition",
+      "status": "Upcoming",
+      "next_date": "31/12/2026",
+      "direction": "Mixed",
+      "note_version": null
+    }
+  ]
+}

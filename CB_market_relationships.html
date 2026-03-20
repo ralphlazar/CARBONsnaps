@@ -1,0 +1,656 @@
+<!-- ================================================================
+     CARBONsnaps — Market Relationships section
+     Drop into shell after the instruments section.
+     Self-contained: all styles scoped to #mkt-rel.
+     ================================================================ -->
+
+<style>
+#mkt-rel {
+  margin: 2.5rem 0;
+  --mrk-eu:      #3B82F6;
+  --mrk-uk:      #14B8A6;
+  --mrk-us:      #A78BFA;
+  --mrk-fuel:    #F59E0B;
+  --mrk-avia:    #F87171;
+  --mrk-vcm:     #4ADE80;
+  --mrk-bg:      #080d14;
+  --mrk-bg2:     #0f1520;
+  --mrk-border:  rgba(255,255,255,0.07);
+  --mrk-text:    #dce4f0;
+  --mrk-muted:   #566070;
+  --mrk-subtle:  #1d2535;
+}
+
+#mkt-rel * { box-sizing: border-box; margin: 0; padding: 0; }
+
+#mkt-rel .mrk-hd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+#mkt-rel .mrk-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mrk-muted);
+}
+
+#mkt-rel .mrk-hint {
+  font-size: 0.7rem;
+  color: var(--mrk-muted);
+  opacity: 0.6;
+}
+
+/* ---- legend ---- */
+#mkt-rel .mrk-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  background: var(--mrk-subtle);
+  border: 1px solid var(--mrk-border);
+  border-radius: 6px;
+}
+
+#mkt-rel .leg-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+}
+
+#mkt-rel .leg-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--mrk-border);
+}
+
+#mkt-rel .leg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  color: var(--mrk-muted);
+  white-space: nowrap;
+}
+
+#mkt-rel .leg-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ---- network canvas ---- */
+#mkt-rel .mrk-canvas {
+  background: var(--mrk-bg);
+  border: 1px solid var(--mrk-border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+#mkt-rel .mrk-canvas svg { display: block; width: 100%; }
+
+#mkt-rel .node-g { cursor: pointer; }
+#mkt-rel .node-g .n-circle { transition: r 0.15s; }
+
+#mkt-rel .n-lbl {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-anchor: middle;
+  dominant-baseline: central;
+  fill: #dce4f0;
+  pointer-events: none;
+}
+#mkt-rel .n-sub {
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-anchor: middle;
+  dominant-baseline: central;
+  fill: rgba(180,196,220,0.45);
+  pointer-events: none;
+}
+
+/* ---- detail panel ---- */
+#mkt-rel .mrk-detail {
+  margin-top: 0.75rem;
+  padding: 1.1rem 1.25rem;
+  min-height: 110px;
+  background: var(--mrk-bg2);
+  border: 1px solid var(--mrk-border);
+  border-radius: 8px;
+}
+
+#mkt-rel .mrk-prompt {
+  color: var(--mrk-muted);
+  font-size: 0.78rem;
+  text-align: center;
+  padding: 1.5rem 0;
+  opacity: 0.55;
+}
+
+#mkt-rel .mrk-det-hd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 0.7rem;
+  margin-bottom: 0.7rem;
+  border-bottom: 1px solid var(--mrk-border);
+}
+
+#mkt-rel .mrk-ticker {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+#mkt-rel .mrk-fullname {
+  font-size: 0.78rem;
+  color: var(--mrk-muted);
+}
+
+#mkt-rel .mrk-fambadge {
+  margin-left: auto;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+#mkt-rel .mrk-desc {
+  font-size: 0.77rem;
+  color: var(--mrk-muted);
+  line-height: 1.6;
+  margin-bottom: 0.85rem;
+}
+
+#mkt-rel .mrk-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+#mkt-rel .mrk-link-row {
+  display: grid;
+  grid-template-columns: 58px 82px 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+#mkt-rel .mrk-peer {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 3px 7px;
+  border-radius: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#mkt-rel .mrk-ltype {
+  font-size: 0.65rem;
+  color: var(--mrk-muted);
+  padding-top: 3px;
+  white-space: nowrap;
+}
+
+#mkt-rel .mrk-ltext {
+  font-size: 0.77rem;
+  color: var(--mrk-text);
+  line-height: 1.57;
+}
+
+#mkt-rel .mrk-reg {
+  font-size: 0.62rem;
+  color: var(--mrk-muted);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--mrk-border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: 4px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+</style>
+
+<section id="mkt-rel">
+
+  <div class="mrk-hd">
+    <span class="mrk-title">Market relationships</span>
+    <span class="mrk-hint">click instrument to explore</span>
+  </div>
+
+  <!-- legend -->
+  <div class="mrk-legend">
+    <div class="leg-group">
+      <div class="leg-item"><span class="leg-dot" style="background:#3B82F6"></span>EU ETS</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#14B8A6"></span>UK ETS</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#A78BFA"></span>US cap-and-trade</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#F59E0B"></span>Clean fuel</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#F87171"></span>Aviation</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#4ADE80"></span>Voluntary</div>
+    </div>
+    <div class="leg-divider"></div>
+    <div class="leg-group">
+      <div class="leg-item">
+        <svg width="22" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="22" y2="3" stroke="#60A5FA" stroke-width="2.5" stroke-linecap="round"/></svg>
+        Formal link
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="22" y2="3" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/></svg>
+        Policy link
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="22" y2="3" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="3,4" stroke-linecap="round"/></svg>
+        Market link
+      </div>
+      <div class="leg-item">
+        <svg width="22" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="22" y2="3" stroke="#3d4f62" stroke-width="1.2" stroke-dasharray="2,5" stroke-linecap="round"/></svg>
+        Structural
+      </div>
+    </div>
+  </div>
+
+  <!-- network -->
+  <div class="mrk-canvas">
+    <svg id="mkt-svg" viewBox="0 0 680 345" xmlns="http://www.w3.org/2000/svg">
+      <g id="mkt-edges"></g>
+      <g id="mkt-nodes"></g>
+    </svg>
+  </div>
+
+  <!-- detail panel -->
+  <div id="mkt-detail" class="mrk-detail">
+    <div class="mrk-prompt">Select an instrument above to see its market linkages</div>
+  </div>
+
+</section>
+
+<script>
+(function () {
+  /* ── data ──────────────────────────────── */
+
+  const FAM = {
+    'eu':   { color: '#3B82F6', label: 'EU ETS' },
+    'uk':   { color: '#14B8A6', label: 'UK ETS' },
+    'us':   { color: '#A78BFA', label: 'US cap-and-trade' },
+    'fuel': { color: '#F59E0B', label: 'Clean fuel' },
+    'avia': { color: '#F87171', label: 'Aviation offset' },
+    'vcm':  { color: '#4ADE80', label: 'Voluntary' },
+  };
+
+  const NODES = [
+    { id: 'EUA',    x: 148, y: 97,  r: 32, fam: 'eu',   sub: 'EU' },
+    { id: 'UKA',    x: 275, y: 60,  r: 30, fam: 'uk',   sub: 'UK' },
+    { id: 'RGGI',   x: 86,  y: 241, r: 28, fam: 'us',   sub: 'NE US' },
+    { id: 'CCA',    x: 210, y: 267, r: 28, fam: 'us',   sub: 'CA' },
+    { id: 'LCFS',   x: 355, y: 255, r: 30, fam: 'fuel', sub: 'CA' },
+    { id: 'RIN',    x: 465, y: 228, r: 28, fam: 'fuel', sub: 'US fed' },
+    { id: '45Z',    x: 552, y: 293, r: 28, fam: 'fuel', sub: 'US fed' },
+    { id: 'CORSIA', x: 480, y: 85,  r: 34, fam: 'avia', sub: 'ICAO' },
+    { id: 'VCM',    x: 600, y: 164, r: 28, fam: 'vcm',  sub: 'Vol.' },
+  ];
+
+  const EDGES = [
+    { s: 'EUA',    t: 'UKA',    type: 'formal',     regs: ['REG-023'] },
+    { s: 'EUA',    t: 'CORSIA', type: 'regulatory', regs: ['REG-024'] },
+    { s: 'UKA',    t: 'CORSIA', type: 'regulatory', regs: [] },
+    { s: 'CORSIA', t: 'VCM',    type: 'market',     regs: ['REG-029'] },
+    { s: 'LCFS',   t: 'RIN',    type: 'market',     regs: [] },
+    { s: 'LCFS',   t: '45Z',    type: 'market',     regs: [] },
+    { s: 'RIN',    t: '45Z',    type: 'market',     regs: [] },
+    { s: 'LCFS',   t: 'CCA',    type: 'market',     regs: [] },
+    { s: 'RGGI',   t: 'CCA',    type: 'structural', regs: [] },
+    { s: 'EUA',    t: 'RGGI',   type: 'structural', regs: [] },
+  ];
+
+  const ESTYLE = {
+    formal:     { stroke: '#60A5FA', w: 2.5,  dash: '',    opBase: 0.55 },
+    regulatory: { stroke: '#94A3B8', w: 1.5,  dash: '6,3', opBase: 0.4  },
+    market:     { stroke: '#F59E0B', w: 1.5,  dash: '3,5', opBase: 0.4  },
+    structural: { stroke: '#3d4f62', w: 1.2,  dash: '2,6', opBase: 0.3  },
+  };
+
+  const TYPE_LABEL = {
+    formal:     'formal link',
+    regulatory: 'policy link',
+    market:     'market link',
+    structural: 'structural',
+  };
+
+  const DETAILS = {
+    EUA: {
+      fullName: 'EU Allowance',
+      fam: 'eu',
+      desc: 'Primary compliance instrument under the EU ETS. Covers ~40% of EU GHG emissions across power, heavy industry, and (partially) aviation. The benchmark against which most other compliance markets are priced.',
+      links: [
+        {
+          peer: 'UKA', type: 'formal', regs: ['REG-023'],
+          text: 'Formal linking negotiations live. A deal creates one larger, more liquid market and eliminates cross-border compliance arbitrage. The UKA policy trajectory — ARP increase to £28 (REG-017), maritime expansion (REG-018) — is structurally designed to make the price gap small enough to link. Watch price convergence as the deal signal.',
+        },
+        {
+          peer: 'CORSIA', type: 'regulatory', regs: ['REG-024'],
+          text: 'EU aviation stop-the-clock expires 2026-H2. If the EU determines CORSIA is not equivalent, full ETS coverage of international aviation reinstates — adding structural EUA demand. Binary near-term risk. The assessment is the event to track.',
+        },
+        {
+          peer: 'RGGI', type: 'structural', regs: [],
+          text: 'RGGI was explicitly modelled on EU ETS. The persistent price gap (RGGI ~$15 vs EUA ~€65) reflects US policy fragmentation and the absence of a federal cap — not a mechanism difference. The structural similarity makes them policy comparators, not market substitutes.',
+        },
+      ]
+    },
+    UKA: {
+      fullName: 'UK Allowance',
+      fam: 'uk',
+      desc: 'UK ETS allowance, live since Jan 2021 post-Brexit. Structurally identical to EUA but diverging in price and policy detail. The ARP (auction reserve price) is the primary policy lever separating UKA from a free float.',
+      links: [
+        {
+          peer: 'EUA', type: 'formal', regs: ['REG-023'],
+          text: 'Active linking negotiations. The ARP increase to £28 (REG-017) and maritime expansion launch (REG-018) both reduce the structural gap with EU ETS and signal UK intent to make linking viable. UK CBAM launch in 2027 (REG-022) further aligns the policy architecture. Price convergence is the market signal of negotiating progress.',
+        },
+        {
+          peer: 'CORSIA', type: 'regulatory', regs: [],
+          text: 'UK aviation is subject to both UK ETS and CORSIA for overlapping international routes. The obligations do not net off — airlines must satisfy both. No formal equivalence determination has been made for UKA vs CORSIA.',
+        },
+      ]
+    },
+    RGGI: {
+      fullName: 'RGGI Allowance',
+      fam: 'us',
+      desc: 'Regional Greenhouse Gas Initiative. Northeast US power sector only, 11 participating states. The oldest US cap-and-trade programme. Politically constrained by the multi-state structure — New Jersey rejoined in 2020, Virginia exited in 2023.',
+      links: [
+        {
+          peer: 'CCA', type: 'structural', regs: [],
+          text: 'Both US state-level cap-and-trade programmes targeting the power sector. No cross-recognition of allowances, no formal link. The ~$20 price gap (RGGI ~$15, CCA ~$35) reflects California\'s economy-wide coverage, the WCI link with Québec, and California\'s harder cap trajectory versus RGGI\'s multi-state political constraints.',
+        },
+        {
+          peer: 'EUA', type: 'structural', regs: [],
+          text: 'RGGI was designed using EU ETS as the reference model. Mechanically equivalent — both run price-discovery auctions with a reserve price and a cost containment reserve ceiling. The price gap tracks the difference between a binding national framework (EU) and a voluntary multi-state scheme (RGGI).',
+        },
+      ]
+    },
+    CCA: {
+      fullName: 'California Carbon Allowance',
+      fam: 'us',
+      desc: 'Cap-and-trade allowance under the Western Climate Initiative (WCI), linked with Québec since 2013. Economy-wide coverage of ~85% of California GHG emissions — the most comprehensive US state scheme by design and by price.',
+      links: [
+        {
+          peer: 'LCFS', type: 'market', regs: [],
+          text: 'Dual compliance for California fuel suppliers. LCFS is a performance standard; CCA is an allowance surrender obligation. A fuel that reduces carbon intensity generates LCFS credits and reduces CCA exposure simultaneously. The combined compliance cost — not either instrument in isolation — drives California clean fuel investment economics.',
+        },
+        {
+          peer: 'RGGI', type: 'structural', regs: [],
+          text: 'Both US state cap-and-trade schemes. CCA commands a higher price due to economy-wide coverage, the WCI international link, and California\'s hard legislated 2030 target. RGGI remains power-only with more modest ambition and no international link.',
+        },
+      ]
+    },
+    LCFS: {
+      fullName: 'Low Carbon Fuel Standard credit',
+      fam: 'fuel',
+      desc: 'California credit generated when a fuel\'s carbon intensity (CI) falls below the annual benchmark. The primary price signal for US clean fuel project finance. Credit value scales with how far below the benchmark a fuel scores.',
+      links: [
+        {
+          peer: 'RIN', type: 'market', regs: [],
+          text: 'Credit stacking: a US renewable diesel or SAF producer simultaneously generates LCFS credits and D4/D3 RINs from the same volume of fuel. The combined credit stack determines project IRR. The two markets are independent but correlated — a collapse in either erodes the investment case. RIN D-category (D3 cellulosic vs D4 biomass diesel) also determines which LCFS pathway the fuel can register under.',
+        },
+        {
+          peer: '45Z', type: 'market', regs: [],
+          text: '45Z stacks on top. The IRA production tax credit (upstream, at the producer) and the California CI credit (downstream, at blending) are additive. 2026 is the first year where LCFS + RIN + 45Z can all be modelled together with actual market data. Significant uplift to project economics for qualifying fuels.',
+        },
+        {
+          peer: 'CCA', type: 'market', regs: [],
+          text: 'Dual California compliance obligation. Fuel suppliers face both the LCFS CI target and the CCA allowance surrender requirement. Cleaner fuels reduce both simultaneously — LCFS and CCA function as complementary compliance instruments for California-regulated entities.',
+        },
+      ]
+    },
+    RIN: {
+      fullName: 'Renewable Identification Number',
+      fam: 'fuel',
+      desc: 'Federal credit under the Renewable Fuel Standard (RFS). Generated per gallon of qualifying renewable fuel blended into the US supply. D-category determines value: D3 (cellulosic) commands a significant premium over D4 (biomass-based diesel), which in turn trades above D6 (conventional ethanol).',
+      links: [
+        {
+          peer: 'LCFS', type: 'market', regs: [],
+          text: 'Credit stacking with LCFS — see LCFS detail for mechanics. Key distinction: RIN category (D3 vs D4) constrains which LCFS pathways are available for registration. Integrated producers must optimise across both systems simultaneously rather than treating them independently.',
+        },
+        {
+          peer: '45Z', type: 'market', regs: [],
+          text: '45Z is a production credit; RINs are generated at blending. For integrated producers, the interaction is a key structuring question in 2026 project finance: 45Z is recognised at the production gate, RIN at the blending event. How the IRS treats this split in combined-entity structures is still being resolved.',
+        },
+      ]
+    },
+    '45Z': {
+      fullName: '45Z Clean Fuel Production Credit',
+      fam: 'fuel',
+      desc: 'IRA-created federal production tax credit, effective 2025–2027. Replaces the blenders tax credit (BTC). Applies upstream at the producer level — not at blending. Value scales with lifecycle emissions intensity; lower CI score = higher credit per gallon.',
+      links: [
+        {
+          peer: 'LCFS', type: 'market', regs: [],
+          text: 'Stacks with LCFS. 45Z is recognised at the production gate against lifecycle CI; LCFS is recognised in California against the annual benchmark. The two apply at different points but are fully additive. 2026 provides the first real data on how the combined stack is being priced into offtake agreements.',
+        },
+        {
+          peer: 'RIN', type: 'market', regs: [],
+          text: 'Both federal mechanisms applying to the same physical fuel at different supply chain points. For integrated producers the question is net value allocation: 45Z at production, RIN at blending. Credit optimisation models need to track both simultaneously. Active structuring and advisory work in 2026.',
+        },
+      ]
+    },
+    CORSIA: {
+      fullName: 'CORSIA Eligible Unit',
+      fam: 'avia',
+      desc: 'ICAO Carbon Offsetting and Reduction Scheme for International Aviation. Phase 1 runs 2024–2026 (voluntary for most states); Phase 2 begins 2027 (mandatory for more participants). Airlines must surrender eligible offset units for emissions above the 2019 baseline.',
+      links: [
+        {
+          peer: 'EUA', type: 'regulatory', regs: ['REG-024'],
+          text: 'EU aviation stop-the-clock expires 2026-H2. If the EU finds CORSIA is not equivalent to EU ETS aviation coverage, EU ETS reinstates for international routes — materially increasing EUA demand. The assessment is a binary event with direct EUA price implications. Watch for the Commission\'s preliminary position before the expiry date.',
+        },
+        {
+          peer: 'UKA', type: 'regulatory', regs: [],
+          text: 'UK aviation is subject to both UK ETS and CORSIA for overlapping routes. The two obligations are not offset against each other. No UK equivalence determination has been made. Airlines operating UK-origin international routes face dual compliance planning.',
+        },
+        {
+          peer: 'VCM', type: 'market', regs: ['REG-029'],
+          text: 'CORSIA eligible units are a curated, quality-screened subset of voluntary carbon supply. Eligible standards (Verra VCS + CCB, Gold Standard) trade at a premium to non-eligible credits. Phase 1→2 transition (REG-029, 31 Dec 2026) introduces new eligibility criteria — creating vintage risk for existing CORSIA-labelled inventory. COP31 (REG-030, Nov 2026) sets the political tone for post-2030 ambition.',
+        },
+      ]
+    },
+    VCM: {
+      fullName: 'Voluntary Carbon Market credit',
+      fam: 'vcm',
+      desc: 'Credits from voluntary standards (Verra VCS, Gold Standard, ACR, CAR). Not linked to a compliance mandate — value is driven by corporate net-zero demand and credit quality signals: additionality, permanence, co-benefits, and increasingly, CORSIA eligibility.',
+      links: [
+        {
+          peer: 'CORSIA', type: 'market', regs: ['REG-029', 'REG-030'],
+          text: 'CORSIA eligibility is the premium tier within VCM supply. Eligible credits trade above non-eligible on quality and demand certainty. Phase 2 transition criteria (REG-029) and COP31 ambition signals (REG-030) are the two near-term pricing catalysts for the eligible subset. Non-eligible voluntary credits are structurally insulated from CORSIA dynamics but remain exposed to the broader corporate demand and integrity debates.',
+        },
+      ]
+    },
+  };
+
+  /* ── render ────────────────────────────── */
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const byId = id => document.getElementById(id);
+  const edgeG = byId('mkt-edges');
+  const nodeG = byId('mkt-nodes');
+  const detail = byId('mkt-detail');
+
+  const nodeMap = {};
+  NODES.forEach(n => { nodeMap[n.id] = n; });
+
+  // edges
+  const edgeEls = EDGES.map(e => {
+    const sn = nodeMap[e.s], tn = nodeMap[e.t];
+    const st = ESTYLE[e.type];
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', sn.x); line.setAttribute('y1', sn.y);
+    line.setAttribute('x2', tn.x); line.setAttribute('y2', tn.y);
+    line.setAttribute('stroke', st.stroke);
+    line.setAttribute('stroke-width', st.w);
+    line.setAttribute('stroke-linecap', 'round');
+    if (st.dash) line.setAttribute('stroke-dasharray', st.dash);
+    line.setAttribute('opacity', st.opBase);
+    edgeG.appendChild(line);
+    return { el: line, edge: e };
+  });
+
+  // nodes
+  let sel = null;
+
+  NODES.forEach(n => {
+    const fc = FAM[n.fam].color;
+    const g = document.createElementNS(NS, 'g');
+    g.classList.add('node-g');
+
+    // selection ring
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', n.x); ring.setAttribute('cy', n.y);
+    ring.setAttribute('r', n.r + 9);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', fc);
+    ring.setAttribute('stroke-width', '1');
+    ring.setAttribute('opacity', '0');
+    ring.setAttribute('stroke-dasharray', '4,3');
+    g.appendChild(ring);
+
+    // ambient glow
+    const glow = document.createElementNS(NS, 'circle');
+    glow.setAttribute('cx', n.x); glow.setAttribute('cy', n.y);
+    glow.setAttribute('r', n.r + 2);
+    glow.setAttribute('fill', fc);
+    glow.setAttribute('opacity', '0');
+    g.appendChild(glow);
+
+    // main circle
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', n.x); c.setAttribute('cy', n.y);
+    c.setAttribute('r', n.r);
+    c.setAttribute('fill', fc + '18');
+    c.setAttribute('stroke', fc);
+    c.setAttribute('stroke-width', '1.5');
+    c.classList.add('n-circle');
+    g.appendChild(c);
+
+    // ticker
+    const lbl = document.createElementNS(NS, 'text');
+    lbl.setAttribute('x', n.x); lbl.setAttribute('y', n.y - 5);
+    lbl.setAttribute('class', 'n-lbl');
+    lbl.textContent = n.id;
+    g.appendChild(lbl);
+
+    // sub
+    const sub = document.createElementNS(NS, 'text');
+    sub.setAttribute('x', n.x); sub.setAttribute('y', n.y + 9);
+    sub.setAttribute('class', 'n-sub');
+    sub.textContent = n.sub;
+    g.appendChild(sub);
+
+    g.addEventListener('click', ev => {
+      ev.stopPropagation();
+      if (sel === n.id) { sel = null; reset(); showPrompt(); }
+      else { sel = n.id; highlight(n.id); showDetail(n.id); }
+    });
+
+    g.addEventListener('mouseenter', () => { if (!sel) preHighlight(n.id); });
+    g.addEventListener('mouseleave', () => { if (!sel) reset(); });
+
+    nodeG.appendChild(g);
+    n._g = g; n._ring = ring; n._glow = glow; n._c = c;
+  });
+
+  byId('mkt-svg').addEventListener('click', () => {
+    if (sel) { sel = null; reset(); showPrompt(); }
+  });
+
+  /* ── interaction helpers ────────────────── */
+
+  function peers(id) {
+    const s = new Set();
+    EDGES.forEach(e => {
+      if (e.s === id) s.add(e.t);
+      if (e.t === id) s.add(e.s);
+    });
+    return s;
+  }
+
+  function preHighlight(id) {
+    const p = peers(id);
+    NODES.forEach(n => {
+      n._g.style.opacity = (n.id === id || p.has(n.id)) ? '1' : '0.25';
+    });
+    edgeEls.forEach(({ el, edge }) => {
+      const rel = edge.s === id || edge.t === id;
+      el.setAttribute('opacity', rel ? '0.9' : '0.06');
+      el.setAttribute('stroke-width', rel ? ESTYLE[edge.type].w * 1.7 : ESTYLE[edge.type].w);
+    });
+  }
+
+  function highlight(id) {
+    const p = peers(id);
+    NODES.forEach(n => {
+      n._g.style.opacity = (n.id === id || p.has(n.id)) ? '1' : '0.18';
+      n._ring.setAttribute('opacity', n.id === id ? '0.7' : '0');
+      n._glow.setAttribute('opacity', n.id === id ? '0.06' : '0');
+    });
+    edgeEls.forEach(({ el, edge }) => {
+      const rel = edge.s === id || edge.t === id;
+      el.setAttribute('opacity', rel ? '0.95' : '0.04');
+      el.setAttribute('stroke-width', rel ? ESTYLE[edge.type].w * 2 : ESTYLE[edge.type].w);
+    });
+  }
+
+  function reset() {
+    NODES.forEach(n => {
+      n._g.style.opacity = '1';
+      n._ring.setAttribute('opacity', '0');
+      n._glow.setAttribute('opacity', '0');
+    });
+    edgeEls.forEach(({ el, edge }) => {
+      el.setAttribute('opacity', ESTYLE[edge.type].opBase);
+      el.setAttribute('stroke-width', ESTYLE[edge.type].w);
+    });
+  }
+
+  /* ── detail panel ───────────────────────── */
+
+  function showPrompt() {
+    detail.innerHTML = '<div class="mrk-prompt">Select an instrument above to see its market linkages</div>';
+  }
+
+  function showDetail(id) {
+    const d = DETAILS[id];
+    const n = nodeMap[id];
+    const fc = FAM[n.fam].color;
+    const fl = FAM[n.fam].label;
+
+    const rows = (d.links || []).map(l => {
+      const pfc = FAM[nodeMap[l.peer].fam].color;
+      const regtags = l.regs.map(r => `<span class="mrk-reg">${r}</span>`).join('');
+      return `<div class="mrk-link-row">
+        <span class="mrk-peer" style="background:${pfc}18;color:${pfc};border:1px solid ${pfc}40">${l.peer}</span>
+        <span class="mrk-ltype">${TYPE_LABEL[l.type] || l.type}</span>
+        <span class="mrk-ltext">${l.text}${regtags}</span>
+      </div>`;
+    }).join('');
+
+    detail.innerHTML = `
+      <div class="mrk-det-hd">
+        <span class="mrk-ticker" style="color:${fc}">${id}</span>
+        <span class="mrk-fullname">${d.fullName}</span>
+        <span class="mrk-fambadge" style="color:${fc};border-color:${fc}40;background:${fc}12">${fl}</span>
+      </div>
+      <div class="mrk-desc">${d.desc}</div>
+      <div class="mrk-links">${rows || '<span style="color:var(--mrk-muted);font-size:0.77rem">No direct linkages tracked for this instrument.</span>'}</div>
+    `;
+  }
+
+  showPrompt();
+})();
+</script>
