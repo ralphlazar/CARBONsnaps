@@ -8,7 +8,7 @@
       "weekly": "Update weekly — price consensus, regulatory signals, stories",
       "structural": "Update on major regulatory decision or market structure change"
     },
-    "built_at": "2026-03-20 17:14"
+    "built_at": "2026-03-20 17:43"
   },
   "instruments": [
     {
@@ -5148,12 +5148,12 @@
         }
       }
     ],
-    "last_synced": "2026-03-19",
+    "last_synced": "2026-03-20",
     "stale_warnings": [],
     "total_events": 30,
     "changelog": {
-      "generated": "2026-03-19",
-      "generated_at": "2026-03-19T22:45:16.811036+00:00",
+      "generated": "2026-03-20",
+      "generated_at": "2026-03-20T17:25:09.620303+00:00",
       "changes": []
     }
   },
