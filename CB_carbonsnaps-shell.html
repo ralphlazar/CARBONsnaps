@@ -1181,6 +1181,9 @@ function init() {
     if (_ev) openRegTooltip(_ev);
   }
 
+  // Deep-link: open glossary term from hash e.g. #gloss-eu-ets
+  handleGlossHash();
+
   // Digest modal — localhost only
   const _isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
   if (_isLocal) {
@@ -2188,9 +2191,12 @@ function buildDigestText() {
   return lines.join('\n');
 }
 
-// ── Digest HTML (for clipboard rich-text paste into Substack) ──
-// Glossary terms are hyperlinked to carbonsnaps.com (first occurrence only).
-// TODO: swap href to https://carbonsnaps.com/glossary#<slug> once a glossary page exists.
+// ── Glossary slug — converts a term to a URL hash fragment ──
+function glossSlug(term) {
+  return 'gloss-' + term.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
+// ── Linkify for digest HTML — first-occurrence glossary links with slugged hash ──
 function linkifyDigest(rawText) {
   if (!rawText) return escHtml(rawText);
   const pairs = [];
@@ -2207,13 +2213,15 @@ function linkifyDigest(rawText) {
     if (re.test(text)) {
       text = text.replace(re, (_m, match) => {
         linked.add(term);
-        return '<a href="https://carbonsnaps.com" style="color:#00c896;text-decoration:underline">' + match + '</a>';
+        const href = 'https://carbonsnaps.com/#' + glossSlug(term);
+        return '<a href="' + href + '" style="color:#00c896;text-decoration:underline">' + match + '</a>';
       });
     }
   });
   return text;
 }
 
+// ── Digest HTML (for clipboard rich-text paste into Substack) ──
 function buildDigestHtml() {
   const meta  = DATA._meta || {};
   const built = meta.generated || new Date().toISOString().slice(0, 10);
@@ -2221,7 +2229,7 @@ function buildDigestHtml() {
   const titleDate = builtDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
 
   const esc = escHtml;
-  const p   = (s) => '<p>' + s + '</p>';
+  const p   = s => '<p>' + s + '</p>';
   const hr  = '<hr style="border:none;border-top:1px solid #ccc;margin:16px 0">';
   const parts = [];
 
@@ -2232,7 +2240,6 @@ function buildDigestHtml() {
   }
   parts.push(hr);
 
-  // Global stories
   const cards = (DATA.globalStories && DATA.globalStories.cards) || [];
   if (cards.length) {
     parts.push('<h3>THIS WEEK</h3>');
@@ -2244,7 +2251,6 @@ function buildDigestHtml() {
     parts.push(hr);
   }
 
-  // Changelog
   const cl = (DATA.regulatory && DATA.regulatory.changelog) || {};
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 7);
   const cutoffStr = cutoff.toISOString().slice(0, 10);
@@ -2253,8 +2259,8 @@ function buildDigestHtml() {
     parts.push('<h3>WHAT CHANGED THIS WEEK</h3>');
     const CHANGE_LABELS = { new_event:'New event', status:'Status change', date:'Date revised', direction:'Direction change', note:'Analyst note updated' };
     recent.forEach(c => {
-      const what  = CHANGE_LABELS[c.change_type] || c.change_type;
-      const sig   = c.significance === 'high' ? ' <strong>[HIGH]</strong>' : c.significance === 'medium' ? ' [MED]' : '';
+      const what   = CHANGE_LABELS[c.change_type] || c.change_type;
+      const sig    = c.significance === 'high' ? ' <strong>[HIGH]</strong>' : c.significance === 'medium' ? ' [MED]' : '';
       const fromTo = (c.from && c.to) ? '  ' + esc(c.from) + ' &rarr; ' + esc(c.to) : '';
       parts.push(p('<strong>' + esc(c.id) + '  ' + esc(what) + '</strong>' + sig));
       parts.push(p(esc(c.title) + fromTo));
@@ -2262,7 +2268,6 @@ function buildDigestHtml() {
     parts.push(hr);
   }
 
-  // Next 30 days
   const upcoming = (DATA.regulatory && DATA.regulatory.events || [])
     .map(ev => ({ ev, d: daysUntil(ev.next_date) }))
     .filter(({ d }) => d !== null && d >= 0 && d <= 30)
@@ -2284,6 +2289,18 @@ function buildDigestHtml() {
   parts.push(p('<a href="https://carbonsnaps.com" style="color:#00c896">CARBONsnaps</a> \u2014 Environmental Commodity Intelligence'));
   return '<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:640px;margin:0 auto">' + parts.join('\n') + '</body></html>';
 }
+
+// ── Hash-based glossary deep-link ──
+// Handles incoming links like https://carbonsnaps.com/#gloss-eu-ets
+function handleGlossHash() {
+  const hash = (location.hash || '').replace(/^#/, '');
+  if (!hash.startsWith('gloss-')) return;
+  const slug = hash.slice(6); // strip 'gloss-'
+  const entry = GLOSSARY_TERMS.find(e => glossSlug(e.term) === 'gloss-' + slug);
+  if (entry) openGlossTooltip(entry.term, null);
+}
+
+window.addEventListener('hashchange', handleGlossHash);
 
 function openDigest() {
   const text = buildDigestText();
@@ -2987,7 +3004,6 @@ function openGlossTooltip(termKey, anchorEl) {
   const tt = document.getElementById('gloss-tooltip');
 
   if (_hasHover && anchorEl) {
-    // Hover mode: position near term, no overlay
     _glossPopoverPosition(anchorEl);
     tt.style.display = '';
     // Allow mouse to enter tooltip and cancel hide
