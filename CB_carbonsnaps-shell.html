@@ -3010,10 +3010,10 @@ function openGlossTooltip(termKey, anchorEl) {
     tt.addEventListener('mouseenter', _glossTtEnter);
     tt.addEventListener('mouseleave', _glossTtLeave);
   } else {
-    // Touch mode: centred modal with overlay
-    tt.style.top = '';
-    tt.style.left = '';
-    tt.style.transform = '';
+    // Touch/modal mode (also used for hash deep-links where anchorEl is null)
+    tt.style.top = '50%';
+    tt.style.left = '50%';
+    tt.style.transform = 'translate(-50%,-50%)';
     tt.style.display = '';
     document.getElementById('gloss-overlay').classList.add('active');
     setTimeout(() => {
