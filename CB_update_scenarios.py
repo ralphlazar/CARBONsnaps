@@ -42,7 +42,7 @@ from pathlib import Path
 import anthropic
 
 # Load .env from script directory if present
-_env_path = Path(__file__).parent / ".env"
+_env_path = Path.home() / "Desktop" / ".env"
 if _env_path.exists():
     with open(_env_path) as _f:
         for _line in _f:
