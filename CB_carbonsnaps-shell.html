@@ -194,9 +194,7 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
 }
 .inst-row:last-child{border-bottom:none}
 .inst-row:hover{background:rgba(255,255,255,.04)}
-.inst-row.filter-active{background:rgba(0,200,150,.07);outline:1px solid rgba(0,200,150,.25)}
-.inst-row.filter-active .it-id{opacity:1}
-.inst-row:not(.filter-active).filter-dimmed{opacity:.35}
+
 .inst-row td{padding:9px 6px;vertical-align:middle;}
 .inst-row td+td{border-left:1px solid var(--border);}
 .inst-row:hover .it-name{color:var(--text-hi)}
@@ -710,22 +708,6 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
 }
 .digest-btn:hover{color:var(--green);border-color:rgba(0,200,150,.35)}
 
-/* ── Instrument filter badge ── */
-.reg-filter-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--font-display);font-size:9px;letter-spacing:.8px;
-  text-transform:uppercase;color:var(--green);
-  background:var(--green-faint);border:1px solid rgba(0,200,150,.25);
-  border-radius:3px;padding:4px 10px;margin-bottom:12px;
-  max-width:660px;width:100%;box-sizing:border-box;
-  margin-left:auto;margin-right:auto;display:flex;
-}
-.reg-filter-badge-x{
-  margin-left:auto;cursor:pointer;color:var(--text-lo);
-  font-size:11px;transition:color .15s;
-}
-.reg-filter-badge-x:hover{color:var(--text-hi)}
-
 /* ── Next 30 days strip ── */
 .n30-strip{
   max-width:660px;margin:0 auto 12px;
@@ -1066,7 +1048,6 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
       <button class="digest-btn" id="digest-open-btn">&#128231; Digest</button>
     </div>
     <div id="reg-stale-warnings"></div>
-    <div id="reg-filter-badge"></div>
     <div id="reg-n30"></div>
     <div id="reg-changelog"></div>
     <div class="reg-box">
@@ -1126,7 +1107,6 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
 let DATA = null;
 let activeTooltip = null;
 let activeInstrument = null;
-let activeInstrumentFilter = null;
 let tooltipSparkChart = null;
 
 // ── Boot: load data ──
@@ -1438,29 +1418,6 @@ function renderInstruments() {
     if (!row) return;
     const inst = DATA.instruments.find(i => i.id === row.dataset.id);
     if (!inst) return;
-
-    // Shift-click = open tooltip only
-    if (e.shiftKey) {
-      openTooltip(inst);
-      return;
-    }
-
-    // Skip second click of a double-click — dblclick handler takes over
-    if (e.detail === 2) return;
-
-    // Single click = toggle instrument filter on reg tracker
-    if (activeInstrumentFilter === inst.id) {
-      setInstrumentFilter(null);
-    } else {
-      setInstrumentFilter(inst.id);
-    }
-  });
-
-  table.addEventListener('dblclick', e => {
-    const row = e.target.closest('.inst-row');
-    if (!row) return;
-    const inst = DATA.instruments.find(i => i.id === row.dataset.id);
-    if (!inst) return;
     openTooltip(inst);
   });
 }
@@ -1756,16 +1713,7 @@ function renderRegTable() {
       .map(c => c.id)
   );
 
-  const filterSource = activeInstrumentFilter
-    ? regEvents.filter(ev => {
-        const instr = Array.isArray(ev.instruments_affected)
-          ? ev.instruments_affected
-          : [ev.instruments_affected || ''];
-        return instr.includes(activeInstrumentFilter);
-      })
-    : regEvents;
-
-  const sorted = [...filterSource].sort((a, b) => {
+  const sorted = [...regEvents].sort((a, b) => {
     let av, bv;
     if (regSortCol === 'instruments_affected') {
       av = Array.isArray(a.instruments_affected) ? a.instruments_affected.join(',') : (a.instruments_affected || '');
@@ -2033,51 +1981,12 @@ function outsideRegClose(e) {
 }
 
 // ── Instrument filter ──
-function setInstrumentFilter(instId) {
-  activeInstrumentFilter = instId;
-
-  // Update instrument row highlight/dim
-  document.querySelectorAll('.inst-row').forEach(row => {
-    row.classList.remove('filter-active', 'filter-dimmed');
-    if (instId) {
-      if (row.dataset.id === instId) row.classList.add('filter-active');
-      else row.classList.add('filter-dimmed');
-    }
-  });
-
-  // Update filter badge
-  const badge = document.getElementById('reg-filter-badge');
-  if (badge) {
-    if (instId) {
-      badge.innerHTML = `<div class="reg-filter-badge">
-        Filtering by ${escHtml(instId)}
-        <span class="reg-filter-badge-x" id="filter-clear">&#10005; Clear</span>
-      </div>`;
-      document.getElementById('filter-clear').addEventListener('click', () => setInstrumentFilter(null));
-    } else {
-      badge.innerHTML = '';
-    }
-  }
-
-  renderRegTable();
-  renderN30();
-}
-
 // ── Next 30 days strip ──
 function renderN30() {
   const container = document.getElementById('reg-n30');
   if (!container) return;
 
-  const n30Source = activeInstrumentFilter
-    ? regEvents.filter(ev => {
-        const instr = Array.isArray(ev.instruments_affected)
-          ? ev.instruments_affected
-          : [ev.instruments_affected || ''];
-        return instr.includes(activeInstrumentFilter);
-      })
-    : regEvents;
-
-  const upcoming = n30Source
+  const upcoming = regEvents
     .map(ev => ({ ev, d: daysUntil(ev.next_date) }))
     .filter(({ d }) => d !== null && d >= 0 && d <= 30)
     .sort((a, b) => a.d - b.d);
