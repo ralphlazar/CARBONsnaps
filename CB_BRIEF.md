@@ -195,13 +195,9 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 
 ## Pending items (priority order)
 
-1. **Digest button improvements** — two fixes needed in `CB_carbonsnaps-shell.html` `buildDigestText()`:
-   - Auto-generate title (`CARBONsnaps — DD Month YYYY`) and subtitle (one-line summary of top story) at top of copied text
-   - Fix footer URL from `carbonsnaps.io` → `carbonsnaps.com`
+1. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds.
 
-2. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds.
-
-3. **Carbon markets primer** — "Carbon markets explained" section. Deferred — pocket until audience/product positioning is clearer. See also: `CB_market_relationships.html` built 2026-03-19.
+2. **Carbon markets primer** — "Carbon markets explained" section. Deferred — pocket until audience/product positioning is clearer. See also: `CB_market_relationships.html` built 2026-03-19.
 
 ---
 
@@ -252,6 +248,10 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 - ✅ **Substack account and publication** — account `ralphlazar`, publication CARBONsnaps at `carbonsnaps.substack.com`.
 - ✅ **First Substack post published** — "CARBONsnaps — 20 March 2026", 2026-03-20.
 - ✅ **Daily refresh ritual confirmed working** — all four scripts ran cleanly, site rebuilt and pushed.
+- ✅ **Digest — rich-text clipboard copy** — "Copy for Substack" now writes `ClipboardItem` with both `text/html` and `text/plain`. Substack editor picks up HTML on paste. Falls back to plain text silently on unsupported browsers.
+- ✅ **Digest — glossary hyperlinks** — `buildDigestHtml()` runs story bodies and event summaries through `linkifyDigest()`, which wraps first-occurrence glossary terms in `<a href="https://carbonsnaps.com/#gloss-{slug}">`. Titles/headlines left as plain text.
+- ✅ **Glossary deep-link** — `glossSlug(term)` generates stable hash fragments (`eu-ets` → `#gloss-eu-ets`). `handleGlossHash()` fires on page load and `hashchange`, finds matching `GLOSSARY_TERMS` entry, opens centred modal. Wired into `init()` alongside existing `?event=` deep-link.
+- ✅ **Glossary modal — null-anchor fix** — `openGlossTooltip(term, null)` now correctly opens centred modal on desktop (hover) devices. Previously the hover media query (`top:0;left:0;transform:none`) clobbered modal positioning. Fix: inline styles `top:50%;left:50%;transform:translate(-50%,-50%)` written explicitly in the modal branch, overriding the media query.
 
 ---
 
@@ -327,7 +327,7 @@ Gold collapsible banner above tracker: `"N changes this week · N high-significa
 
 ---
 
-## Substack / digest roadmap
+## Substack / digest — current state (updated 2026-03-20)
 
 ### Concept
 
@@ -335,9 +335,9 @@ Weekly digest generated from live dashboard data — stories, changelog, next 30
 
 ### Phase 1 — Manual (current)
 
-1. Run build locally, click Digest button (localhost only), copy text
-2. Add title and subtitle manually
-3. Paste into Substack editor, publish
+1. Run build locally, click Digest button (localhost only), copy
+2. Paste into Substack editor — HTML paste preserves glossary hyperlinks
+3. Add title and subtitle manually, publish
 
 ### Weekly publishing workflow
 
@@ -349,14 +349,11 @@ Weekly digest generated from live dashboard data — stories, changelog, next 30
 6. Publish → Everyone → Publish now
 7. `git add -A && git commit -m "daily refresh YYYY-MM-DD" && git push`
 
-### Phase 2 — Digest button auto-generates title/subtitle (next session)
+### Digest HTML structure
 
-Fix `buildDigestText()` in shell to prepend:
-- Title: `CARBONsnaps — DD Month YYYY`
-- Subtitle: derived from first story headline
-- Footer URL: `carbonsnaps.com` (not `carbonsnaps.io`)
+`buildDigestHtml()` produces: `<h1>` title, `<h2>` subtitle, `<h3>` section headers, `<h4>` story headlines, `<p>` body paragraphs. Glossary terms in body text linked to `https://carbonsnaps.com/#gloss-{slug}`. Footer links to `https://carbonsnaps.com`.
 
-### Phase 3 — Automated send (later)
+### Phase 2 — Automated send (later)
 
 Build pipeline generates digest and pushes to Substack via API.
 
@@ -366,11 +363,15 @@ Substack free tier. 10% of subscription revenue when paid tiers enabled. Switch 
 
 ---
 
-## Glossary — current state (2026-03-19)
+## Glossary — current state (updated 2026-03-20)
 
 72 entries total. 22 original + 50 added session 2026-03-19. All in `CB_carbonsnaps-shell.html`. Linkify picks up all terms automatically on first occurrence.
 
 **Hover behaviour (pointer devices):** 150ms show delay, 200ms hide grace period, popover positioned near term (280px wide, flips above/below). No overlay. Touch devices: click → centred modal with blackout overlay.
+
+**Deep-link behaviour:** `https://carbonsnaps.com/#gloss-{slug}` opens the matching glossary entry as a centred modal on any device. Hash fired on page load and `hashchange`. Used in Substack digest links.
+
+**Slug format:** `glossSlug(term)` — lowercase, spaces to hyphens, non-alphanumeric stripped. Examples: `"EU ETS"` → `#gloss-eu-ets`, `"Cap-and-trade"` → `#gloss-cap-and-trade`, `"45Z"` → `#gloss-45z`.
 
 Categories: instruments, markets/schemes, regulatory bodies, policy mechanisms, carbon standards, project types, integrity frameworks, lifecycle methodology, units, California legislation, market terms.
 

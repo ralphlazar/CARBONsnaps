@@ -1439,16 +1439,29 @@ function renderInstruments() {
     const inst = DATA.instruments.find(i => i.id === row.dataset.id);
     if (!inst) return;
 
+    // Shift-click = open tooltip only
+    if (e.shiftKey) {
+      openTooltip(inst);
+      return;
+    }
+
+    // Skip second click of a double-click — dblclick handler takes over
+    if (e.detail === 2) return;
+
     // Single click = toggle instrument filter on reg tracker
     if (activeInstrumentFilter === inst.id) {
       setInstrumentFilter(null);
     } else {
       setInstrumentFilter(inst.id);
     }
-    // Double-click or shift-click = open tooltip
-    if (e.detail === 2 || e.shiftKey) {
-      openTooltip(inst);
-    }
+  });
+
+  table.addEventListener('dblclick', e => {
+    const row = e.target.closest('.inst-row');
+    if (!row) return;
+    const inst = DATA.instruments.find(i => i.id === row.dataset.id);
+    if (!inst) return;
+    openTooltip(inst);
   });
 }
 
