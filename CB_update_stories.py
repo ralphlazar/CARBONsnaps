@@ -1,220 +1,288 @@
 #!/usr/bin/env python3
 """
-CB_update_stories.py — CARBONsnaps instrument story generator.
-
-Detects instruments whose price has changed since the last story was written
-(value_at_generation mismatch) and regenerates beginner/moderate/expert stories
-via the Claude API.
+CB_update_stories.py
+Regenerates instrument tooltip stories and global story cards from live price
+and regulatory data. Run after CB_sync_regulatory.py in the daily ritual.
 
 Usage:
-    python3 CB_update_stories.py            # preview: show stale instruments, no API calls
-    python3 CB_update_stories.py --apply    # regenerate stories and write to CB_data.json
-
-Exit codes:
-    0 — clean (no mismatches found, or all resolved successfully)
-    1 — one or more story generation attempts failed
+  python3 CB_update_stories.py           # preview — prints output, no write
+  python3 CB_update_stories.py --apply   # writes back to CB_data.json
 """
 
 import json
 import sys
 import os
-import argparse
-from datetime import date
-import anthropic
-from dotenv import load_dotenv
-
-load_dotenv()
+import re
+from pathlib import Path
+from datetime import date, datetime
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-DATA_FILE = "CB_data.json"
-MODEL = "claude-haiku-4-5-20251001"
-MAX_TOKENS = 1024
+DATA_PATH   = Path(__file__).parent / "CB_data.json"
+MODEL       = "claude-opus-4-5"
+MAX_TOKENS  = 800
+APPLY       = "--apply" in sys.argv
 
-# Instruments with no price data — never touch these
-PLACEHOLDER_PRICES = {"N/A", "--", "", None}
+# Load .env from Desktop (matches CB_update_scenarios.py convention)
+_env_path = Path.home() / "Desktop" / ".env"
+if _env_path.exists():
+    with open(_env_path) as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith("#") and "=" in _line:
+                _k, _v = _line.split("=", 1)
+                os.environ.setdefault(_k.strip(), _v.strip().strip('"').strip("'"))
 
-# One-time corrections applied in the same write pass as stories
-FIELD_CORRECTIONS = {
-    "EUA": {"price_unit": "GBP (CO2.L ETF proxy)"},
-}
+# ── Helpers ───────────────────────────────────────────────────────────────────
 
-# ── Prompt ────────────────────────────────────────────────────────────────────
+def scrub(text):
+    """Remove em-dashes and tidy whitespace."""
+    text = text.replace("\u2014", "-").replace("\u2013", "-")
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 
-SYSTEM_PROMPT = """You are a carbon markets intelligence writer for CARBONsnaps, a B2B environmental commodity platform serving specialist funds, trading desks, and corporate carbon buyers.
-
-Rules (non-negotiable):
-- UK English spelling throughout (e.g. recognised, behaviour, licence).
-- No em-dashes anywhere. Use commas, colons, parentheses, or restructure the sentence.
-- Return only a JSON object with three keys: beginner, moderate, expert. No preamble, no markdown, no backticks.
-- Do not include investment advice or specific buy/sell recommendations.
-- Do not invent regulatory events not referenced in the input.
-
-Story length and tone:
-- beginner: 2-3 sentences. Plain language, no jargon. Explain what the instrument is and what the price move means in simple terms.
-- moderate: 3-4 sentences. Adds mechanism and market context. Assumes reader knows what carbon markets are.
-- expert: 4-5 sentences. Technical, positioning-aware. References regulatory backdrop, supply/demand dynamics, and forward implications where relevant.
-"""
-
-def build_user_prompt(inst: dict) -> str:
-    spark = inst.get("spark", [])
-    spark_summary = f"{len(spark)} data points" if spark else "no historical data"
-
-    lines = [
-        f"Instrument: {inst['name']} ({inst['id']})",
-        f"Market family: {inst['market']}",
-        f"Jurisdiction: {inst['jurisdiction']}",
-        f"Current price: {inst['price']} {inst.get('price_unit', '')}",
-        f"1-week change: {inst.get('change_1w', 'N/A')}",
-        f"1-month change: {inst.get('change_1m', 'N/A')}",
-        f"3-month change: {inst.get('change_3m', 'N/A')}",
-        f"Regulatory signal: {inst.get('regulatory_signal', 'N/A')}",
-        f"Regulatory note: {inst.get('regulatory_note', 'N/A')}",
-        f"Price history: {spark_summary}",
-        "",
-        "Write instrument stories at three audience levels (beginner, moderate, expert).",
-        "Return only a JSON object: {\"beginner\": \"...\", \"moderate\": \"...\", \"expert\": \"...\"}",
-    ]
-    return "\n".join(lines)
-
-# ── Core logic ────────────────────────────────────────────────────────────────
-
-def is_placeholder(price) -> bool:
-    return price in PLACEHOLDER_PRICES
-
-def is_stale(inst: dict) -> bool:
-    price = inst.get("price")
-    if is_placeholder(price):
-        return False
-    vag = inst.get("value_at_generation")
-    return vag != price
-
-def find_stale(instruments: list) -> list:
-    return [i for i in instruments if is_stale(i)]
-
-def generate_story(client: anthropic.Anthropic, inst: dict) -> dict:
-    """Call Claude API and return parsed {beginner, moderate, expert} dict."""
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=MAX_TOKENS,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": build_user_prompt(inst)}],
+def call_claude(prompt):
+    import urllib.request
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        print("[ERROR] ANTHROPIC_API_KEY not set")
+        sys.exit(1)
+    payload = json.dumps({
+        "model": MODEL,
+        "max_tokens": MAX_TOKENS,
+        "messages": [{"role": "user", "content": prompt}]
+    }).encode()
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages",
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "x-api-key": api_key,
+            "anthropic-version": "2023-06-01"
+        }
     )
-    raw = response.content[0].text.strip()
-    # Strip accidental markdown fences if present
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-        raw = raw.strip()
-    stories = json.loads(raw)
-    for key in ("beginner", "moderate", "expert"):
-        if key not in stories:
-            raise ValueError(f"Missing key '{key}' in API response for {inst['id']}")
-    return stories
+    with urllib.request.urlopen(req) as resp:
+        data = json.loads(resp.read())
+    return scrub(data["content"][0]["text"])
+
+def days_until(date_str):
+    """Return days until a date string, or None."""
+    try:
+        if re.match(r"\d{2}/\d{2}/\d{4}", date_str):
+            d = datetime.strptime(date_str, "%d/%m/%Y").date()
+        elif re.match(r"\d{4}-Q\d", date_str):
+            q = int(date_str[-1])
+            d = date(int(date_str[:4]), (q - 1) * 3 + 1, 1)
+        elif re.match(r"\d{4}-H\d", date_str):
+            h = int(date_str[-1])
+            d = date(int(date_str[:4]), 1 if h == 1 else 7, 1)
+        elif re.match(r"\d{4}-\d{2}", date_str):
+            d = datetime.strptime(date_str, "%Y-%m").date().replace(day=1)
+        else:
+            return None
+        return (d - date.today()).days
+    except Exception:
+        return None
+
+# ── Instrument story prompt ───────────────────────────────────────────────────
+
+def build_instrument_prompt(inst, reg_events):
+    iid = inst["id"]
+
+    # Relevant regulatory events for this instrument
+    rel_events = [
+        e for e in reg_events
+        if iid in (
+            e["instruments_affected"]
+            if isinstance(e["instruments_affected"], list)
+            else [e["instruments_affected"]]
+        )
+    ]
+
+    # Sort: upcoming first, then active, then past
+    def event_sort_key(e):
+        d = days_until(e.get("next_date", ""))
+        return d if d is not None else 9999
+
+    rel_events.sort(key=event_sort_key)
+
+    event_lines = []
+    for e in rel_events[:6]:
+        d = days_until(e.get("next_date", ""))
+        timing = f"in {d}d" if d is not None and d >= 0 else ("ongoing" if e.get("status") == "Active" else "past")
+        event_lines.append(
+            f"  - {e['title']} ({timing}, {e['direction']}, {e['status']}): {e.get('analyst_note','')[:180]}"
+        )
+    events_block = "\n".join(event_lines) if event_lines else "  None"
+
+    price_str = f"{inst['price']} {inst['price_unit']}" if inst.get("price") and inst["price"] != "-" else "no current price"
+    changes = []
+    if inst.get("change_1w"): changes.append(f"1w: {inst['change_1w']}")
+    if inst.get("change_1m"): changes.append(f"1m: {inst['change_1m']}")
+    if inst.get("change_3m"): changes.append(f"3m: {inst['change_3m']}")
+    change_str = ", ".join(changes) if changes else "no price history"
+
+    return f"""You are the analyst behind CARBONsnaps, a professional carbon and clean fuel credit intelligence service. Write the instrument briefing for {inst['name']} ({iid}).
+
+INSTRUMENT DATA (as of today, {date.today().isoformat()}):
+  Price: {price_str}
+  Price changes: {change_str}
+  Regulatory signal: {inst['regulatory_signal']}
+  Regulatory note: {inst.get('regulatory_note', '')}
+  Description: {inst.get('description', '')[:300]}
+
+RELEVANT REGULATORY EVENTS:
+{events_block}
+
+Write a single expert-level briefing paragraph (4-6 sentences, ~120-180 words). Rules:
+- Expert audience: institutional traders, carbon market analysts, compliance officers
+- Lead with the most significant price action or structural dynamic right now
+- Connect price behaviour to specific regulatory drivers from the events above
+- Name specific mechanisms, timelines, and thresholds where relevant
+- End with a forward-looking statement about what to watch
+- No em-dashes (use commas or semicolons instead)
+- No bullet points, headers, or markdown
+- No "as of today" or date references in the text
+- Tone: precise, unsentimental, direct
+
+Output the paragraph only. No preamble."""
+
+# ── Global stories prompt ─────────────────────────────────────────────────────
+
+def build_global_stories_prompt(instruments, reg_events):
+    inst_lines = []
+    for inst in instruments:
+        price_str = f"{inst['price']} {inst['price_unit']}" if inst.get("price") and inst["price"] != "-" else "no price"
+        changes = []
+        if inst.get("change_1w"): changes.append(f"1w {inst['change_1w']}")
+        if inst.get("change_3m"): changes.append(f"3m {inst['change_3m']}")
+        inst_lines.append(f"  {inst['id']} ({inst['name']}): {price_str} | {', '.join(changes)} | signal: {inst['regulatory_signal']}")
+
+    # Upcoming events within 90 days
+    upcoming = []
+    for e in reg_events:
+        d = days_until(e.get("next_date", ""))
+        if d is not None and 0 <= d <= 90:
+            upcoming.append(f"  - {e['title']} (in {d}d, {e['direction']}): {e.get('analyst_note','')[:120]}")
+    upcoming_block = "\n".join(upcoming[:8]) if upcoming else "  None in next 90 days"
+
+    return f"""You are the analyst behind CARBONsnaps. Write exactly 3 global market story cards for this week's edition.
+
+MARKET DATA (as of {date.today().isoformat()}):
+{chr(10).join(inst_lines)}
+
+UPCOMING REGULATORY EVENTS (next 90 days):
+{upcoming_block}
+
+Each card must:
+- Cover a distinct cross-instrument theme or a single dominant instrument story
+- Have a headline (max 8 words, punchy and specific)
+- Have a body (5-8 sentences, ~150-200 words) — expert-level, institutional audience
+- Have a source string (comma-separated data sources cited, no URLs)
+- Have an icon (single emoji only)
+
+Rules:
+- No em-dashes anywhere (use commas or semicolons)
+- No bullet points or markdown in body text
+- No "as of today" or date references in body text
+- Cover different parts of the market across the 3 cards (do not write 3 EUA cards)
+- Tone: precise, analytical, unsentimental
+
+Return ONLY valid JSON in this exact structure, no preamble or trailing text:
+[
+  {{
+    "icon": "emoji",
+    "headline": "Headline text here",
+    "label": "Headline text here",
+    "body": "Body text here.",
+    "source": "Source 1, Source 2"
+  }},
+  {{
+    "icon": "emoji",
+    "headline": "Headline text here",
+    "label": "Headline text here",
+    "body": "Body text here.",
+    "source": "Source 1, Source 2"
+  }},
+  {{
+    "icon": "emoji",
+    "headline": "Headline text here",
+    "label": "Headline text here",
+    "body": "Body text here.",
+    "source": "Source 1, Source 2"
+  }}
+]"""
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description="CARBONsnaps instrument story updater")
-    parser.add_argument("--apply", action="store_true", help="Write updated stories to CB_data.json")
-    args = parser.parse_args()
+    print("=" * 60)
+    print(f"  CB_update_stories.py — {'APPLY' if APPLY else 'PREVIEW'} mode")
+    print(f"  {date.today().isoformat()}")
+    print("=" * 60)
 
-    # Load data file
-    if not os.path.exists(DATA_FILE):
-        print(f"ERROR: {DATA_FILE} not found. Run from the CARBONsnaps directory.")
-        sys.exit(1)
+    data = json.loads(DATA_PATH.read_text())
+    instruments = data["instruments"]
+    reg_events  = data["regulatory"]["events"]
+    today_str   = date.today().isoformat()
 
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    # ── 1. Instrument stories ──────────────────────────────────────────────
+    print("\n-- Instrument stories " + "-" * 38)
 
-    instruments = data.get("instruments", [])
-    stale = find_stale(instruments)
-
-    # ── Preview ────────────────────────────────────────────────────────────────
-
-    if not stale:
-        print("✓ All instruments clean — no VAG mismatches found.")
-        sys.exit(0)
-
-    print(f"{'PREVIEW' if not args.apply else 'APPLY'} — {len(stale)} instrument(s) need story refresh:\n")
-    for inst in stale:
-        vag = inst.get("value_at_generation", "absent")
-        print(f"  {inst['id']:8s}  price={inst['price']}  value_at_generation={vag}")
-
-    # Apply field corrections preview
-    corrections_due = {
-        iid: fields
-        for iid, fields in FIELD_CORRECTIONS.items()
-        if any(
-            inst["id"] == iid and inst.get(k) != v
-            for inst in instruments
-            for k, v in fields.items()
-        )
-    }
-    if corrections_due:
-        print(f"\nField corrections to apply:")
-        for iid, fields in corrections_due.items():
-            for k, v in fields.items():
-                orig = next((i.get(k) for i in instruments if i["id"] == iid), "?")
-                print(f"  {iid}.{k}: '{orig}' → '{v}'")
-
-    if not args.apply:
-        print("\nDry run complete. Pass --apply to regenerate stories.")
-        sys.exit(0)
-
-    # ── Apply ──────────────────────────────────────────────────────────────────
-
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        print("\nERROR: ANTHROPIC_API_KEY environment variable not set.")
-        sys.exit(1)
-
-    client = anthropic.Anthropic(api_key=api_key)
-    today = date.today().isoformat()
-    failed = []
-
-    print()
-    for inst in stale:
+    for inst in instruments:
         iid = inst["id"]
-        print(f"  [{iid}] Generating stories...", end=" ", flush=True)
+        print(f"  [{iid}] generating...", end="", flush=True)
+        prompt = build_instrument_prompt(inst, reg_events)
         try:
-            stories = generate_story(client, inst)
+            text = call_claude(prompt)
+            if APPLY:
+                # Preserve structure, update expert only
+                if not isinstance(inst.get("story"), dict):
+                    inst["story"] = {}
+                inst["story"]["expert"] = text
+                inst["value_at_generation"] = inst.get("price")
+                inst["story_generated_at"] = today_str
+            print(f" done ({len(text.split())} words)")
+            if not APPLY:
+                print(f"    PREVIEW: {text[:120]}...")
+        except Exception as ex:
+            print(f" ERROR: {ex}")
 
-            # Write stories
-            inst["story"] = {
-                "beginner": stories["beginner"],
-                "moderate": stories["moderate"],
-                "expert": stories["expert"],
-            }
-            inst["value_at_generation"] = inst["price"]
-            inst["last_updated"] = today
+    # ── 2. Global story cards ──────────────────────────────────────────────
+    print("\n-- Global story cards " + "-" * 38)
+    print("  Generating 3 cards...", end="", flush=True)
 
-            # Apply any field corrections for this instrument
-            for k, v in FIELD_CORRECTIONS.get(iid, {}).items():
-                inst[k] = v
+    prompt = build_global_stories_prompt(instruments, reg_events)
+    try:
+        raw = call_claude(prompt)
+        # Strip any accidental markdown fences
+        raw = re.sub(r"^```[a-z]*\n?", "", raw.strip())
+        raw = re.sub(r"\n?```$", "", raw.strip())
+        cards = json.loads(raw)
+        # Scrub all text fields
+        for card in cards:
+            for field in ("headline", "label", "body", "source"):
+                if field in card:
+                    card[field] = scrub(card[field])
+        print(f" done ({len(cards)} cards)")
+        if APPLY:
+            data["globalStories"]["cards"]        = cards
+            data["globalStories"]["last_updated"] = today_str
+        else:
+            for i, card in enumerate(cards, 1):
+                print(f"    Card {i}: {card.get('headline','?')}")
+                print(f"      {card.get('body','')[:100]}...")
+    except Exception as ex:
+        print(f" ERROR: {ex}")
 
-            print("done.")
-            print(f"         beginner: {stories['beginner'][:80]}...")
-
-        except (json.JSONDecodeError, ValueError, anthropic.APIError) as e:
-            print(f"FAILED — {e}")
-            failed.append(iid)
-
-    # Write back (single atomic write)
-    if len(failed) < len(stale):
-        with open(DATA_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-        updated = len(stale) - len(failed)
-        print(f"\n✓ {updated}/{len(stale)} instrument(s) updated. CB_data.json saved.")
+    # ── 3. Write ───────────────────────────────────────────────────────────
+    if APPLY:
+        DATA_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+        print(f"\n  Written: {DATA_PATH}")
     else:
-        print("\nERROR: All story generation attempts failed. CB_data.json not modified.")
+        print("\n  [Preview mode — no files written. Run with --apply to save.]")
 
-    if failed:
-        print(f"  Failed instruments: {', '.join(failed)}")
-        sys.exit(1)
-
-    sys.exit(0)
+    print("\nDone.")
 
 if __name__ == "__main__":
     main()

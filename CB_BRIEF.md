@@ -2,7 +2,7 @@
 
 ---
 
-## Build workflow (current — updated 2026-03-19)
+## Build workflow (current — updated 2026-03-22)
 
 ### Standard full refresh (new events added, content changed)
 
@@ -11,6 +11,7 @@ cd ~/Downloads/CARBONsnaps
 python3 CB_diff.py --apply
 python3 CB_sync_regulatory.py --apply
 python3 CB_update_scenarios.py --apply --stale-only
+python3 CB_update_stories.py --apply
 python3 CB_build.py && open index.html
 ```
 
@@ -20,6 +21,7 @@ python3 CB_build.py && open index.html
 cd ~/Downloads/CARBONsnaps
 python3 CB_diff.py --apply
 python3 CB_sync_regulatory.py --apply
+python3 CB_update_stories.py --apply
 python3 CB_build.py && open index.html
 ```
 
@@ -45,6 +47,7 @@ Cloudflare Pages auto-deploys within ~1 minute of push.
 | `CB_sync_regulatory.py --apply` | Events tab in Sheet has changed |
 | `CB_update_scenarios.py --apply --stale-only` | New events added, or content changed materially |
 | `CB_update_scenarios.py --apply --force` | Full regeneration — new project, major content overhaul |
+| `CB_update_stories.py --apply` | Every build — regenerates instrument stories and global cards |
 | `CB_build.py` | Any time — rebuilds index.html from current data.json and shell |
 
 ### `--stale-only` flag behaviour
@@ -60,8 +63,9 @@ An event's scenarios are regenerated if ANY of:
 - ~$0.10 per event scenario generated
 - 30 events × $0.10 = ~$3.00 for a full forced regeneration
 - Daily `--stale-only` builds: $0.00 if no content has changed
+- `CB_update_stories.py --apply`: ~$0.10–0.20/day (8 instrument stories + 3 global cards, ~9 API calls)
 
-### Build output confirmed working (2026-03-20)
+### Build output confirmed working (2026-03-22)
 
 ```
 Instruments      : 8/8
@@ -78,7 +82,7 @@ Known warnings (non-blocking, expected):
 
 ---
 
-## Infrastructure — current state (updated 2026-03-20)
+## Infrastructure — current state (updated 2026-03-22)
 
 ### Hosting
 
@@ -98,16 +102,17 @@ Known warnings (non-blocking, expected):
 
 - **`.env` location**: `~/Desktop/.env` — never inside project folder, never committed
 - **`.env` contents**:
-  - `ANTHROPIC_API_KEY` — Anthropic API key (revoked and replaced 2026-03-20)
+  - `ANTHROPIC_API_KEY` — Anthropic API key. **Must be present for `CB_update_stories.py` and `CB_update_scenarios.py` to work.** Key is NOT auto-loaded from environment — it must be explicitly in this file.
   - `REGULATORY_SHEET_ID=1Tvg30ZkRbomed3zVIx42DLcAAYVK9q50m4yX-hJwu68`
   - `PRICE_HISTORY_SHEET_ID` — not yet set up
   - `FRED_API_KEY` — not yet added (needed by CARBONsnaps; add when scripts use it)
+- **`.env` parse convention** (all scripts): strip quotes from values (`.strip('"').strip("'")`), load at module level before any other logic
+- **Stray `.env` files**: only `~/Desktop/.env` is canonical. Any `.env` inside the project folder should be deleted — it is not read and causes confusion.
 - **Google service account**: `carbonsnaps-sheets@carbonsnaps.iam.gserviceaccount.com`
   - Key file: `CB_market-stats-key.json` in project folder — gitignored
   - Google Cloud project: `CARBONsnaps` (project ID: `carbonsnaps`)
   - Sheets API enabled on this project
   - Service account has Editor access to the regulatory Google Sheet
-- **`CB_update_scenarios.py`** reads `.env` from `Path.home() / "Desktop" / ".env"` — updated 2026-03-20
 
 ### Domain
 
@@ -127,7 +132,7 @@ Known warnings (non-blocking, expected):
 
 ---
 
-## Regulatory tracker — current state (2026-03-19)
+## Regulatory tracker — current state (2026-03-22)
 
 **30 events total. All have scenarios. Sheet has `note_version` column (all blank — start populating when analyst view genuinely changes).**
 
@@ -195,9 +200,15 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 
 ## Pending items (priority order)
 
-1. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds.
+1. **Add `ANTHROPIC_API_KEY` to `~/Desktop/.env`** — required for `CB_update_stories.py` to run. Get from [console.anthropic.com](https://console.anthropic.com). Console was down 2026-03-22 — check and add at next session.
 
-2. **Carbon markets primer** — "Carbon markets explained" section. Deferred — pocket until audience/product positioning is clearer. See also: `CB_market_relationships.html` built 2026-03-19.
+2. **Test `CB_update_stories.py --apply`** — blocked by missing API key. Once key is in `.env`, run preview first, then apply.
+
+3. **Build `CB_discover_events.py`** — web search script that surfaces new publicly-announced regulatory events not yet in the Sheet, for analyst review. Discussed 2026-03-22, not yet built.
+
+4. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds.
+
+5. **Carbon markets primer** — "Carbon markets explained" section. Deferred — pocket until audience/product positioning is clearer. See also: `CB_market_relationships.html` built 2026-03-19.
 
 ---
 
@@ -230,8 +241,7 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 - ✅ **Source attribution on global stories** — `bt-source` restyled to readable body font with separator line and `↗ Source:` prefix label.
 - ✅ **Scenario confidence/magnitude display** — `Conf` and `Magnitude` tags rendered below "Scenarios" section label in event detail tooltip. Colour-coded green/gold/red by level. Only shown if fields present on event.
 - ✅ **Deep-linking to events** — `?event=REG-017` in URL opens event detail tooltip on page load. URL updates on open, clears on close. Works on GitHub Pages (query param, not hash route).
-- ✅ **Next 30 days strip** — compact digest of imminent events above the regulatory tracker. Same width as tracker (`max-width: 660px`). Red dot header, rows show date (red ≤14d, gold 15-30d), relative label, title, instruments, direction badge. Clicking row opens event detail tooltip. Absent when nothing in window. Respects instrument filter.
-- ✅ **Instrument filter** — single click on instrument row highlights it, dims others, filters regulatory tracker and next 30 days strip to that instrument's events. Green filter badge with ✕ Clear appears above tracker. Click same row again or Clear to reset. Double-click or shift-click opens instrument detail tooltip.
+- ✅ **Next 30 days strip** — compact digest of imminent events above the regulatory tracker. Same width as tracker (`max-width: 660px`). Red dot header, rows show date (red ≤14d, gold 15-30d), relative label, title, instruments, direction badge. Clicking row opens event detail tooltip. Absent when nothing in window.
 - ✅ **Weather icon system fully removed** — `.wh-icon` CSS block removed. `sigEmoji()` and `emojiSignal()` functions removed. `signalToDir()` simplified: passes through direction words directly, retains legacy weather string map as silent fallback only. `_iconMap` removed from digest builder. `card.icon` removed from digest output.
 - ✅ **Email digest (Substack)** — `Digest` button in Regulatory Tracker section header generates formatted plain-text weekly digest: this week's stories, changelog entries, next 30 days events. "Copy for Substack" button copies to clipboard. **Localhost-only**: button hidden on live site.
 
@@ -253,9 +263,15 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 - ✅ **Glossary deep-link** — `glossSlug(term)` generates stable hash fragments (`eu-ets` → `#gloss-eu-ets`). `handleGlossHash()` fires on page load and `hashchange`, finds matching `GLOSSARY_TERMS` entry, opens centred modal. Wired into `init()` alongside existing `?event=` deep-link.
 - ✅ **Glossary modal — null-anchor fix** — `openGlossTooltip(term, null)` now correctly opens centred modal on desktop (hover) devices. Previously the hover media query (`top:0;left:0;transform:none`) clobbered modal positioning. Fix: inline styles `top:50%;left:50%;transform:translate(-50%,-50%)` written explicitly in the modal branch, overriding the media query.
 
+## Completed items (session 2026-03-22)
+
+- ✅ **Instrument filter removed** — single click on instrument row now opens instrument detail tooltip (restored original behaviour). Filter logic (`setInstrumentFilter`, `activeInstrumentFilter`, filter badge, filter CSS classes) fully removed from `CB_carbonsnaps-shell.html`. Next 30 days strip always shows all events unfiltered. Decision: filter was undiscoverable and broke tooltip access; Option C (dedicated filter bar above tracker) deferred as future feature.
+- ✅ **`CB_update_stories.py` built** — new daily script regenerates all instrument tooltip stories (`story.expert` field, all 8 instruments) and all 3 global story cards (`globalStories.cards`) via Anthropic API. Reads current price, change percentages, regulatory signal, and relevant upcoming events per instrument. Uses Claude claude-opus-4-5. Writes back to `CB_data.json`. Preview mode (no `--apply`) calls API but does not write. Cost ~$0.10-0.20/day.
+- ✅ **Stray `.env` deleted** — `~/Downloads/CARBONsnaps/.env` deleted. Only canonical `.env` is `~/Desktop/.env`.
+
 ---
 
-## Instruments table — current column layout (updated 2026-03-19)
+## Instruments table — current column layout (updated 2026-03-22)
 
 5 columns: **ID · Name · Price · 52W range bar · Policy price outlook badge**
 
@@ -263,7 +279,7 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 - Policy price outlook badge uses `reg-dir` CSS class
 - 52W range bar: coloured dot (family accent colour) on a track, low/52W/high labels beneath. Falls back to "no data" for CORSIA, RIN, 45Z, VCM
 - Table container: `max-width: 480px`
-- Single click = toggle instrument filter on regulatory tracker. Double-click or shift-click = open instrument detail tooltip.
+- **Single click = open instrument detail tooltip.** (Filter behaviour removed 2026-03-22.)
 
 ### `regulatory_signal` field
 
@@ -271,7 +287,7 @@ Computed mechanically by `CB_build.py` from direction values of upcoming regulat
 
 ---
 
-## `globalStories` data structure (updated 2026-03-19)
+## `globalStories` data structure (updated 2026-03-22)
 
 ```json
 {
@@ -285,7 +301,7 @@ Computed mechanically by `CB_build.py` from direction values of upcoming regulat
         "source": "..."
       }
     ],
-    "last_updated": "2026-03-19"
+    "last_updated": "2026-03-22"
   }
 }
 ```
@@ -295,6 +311,24 @@ Required card fields (enforced by `CB_build.py`): `icon`, `label`, `headline`, `
 `headline` is the article-specific title shown at the top of the briefing tooltip. `label` is retained for backwards compatibility but `headline` takes precedence in the UI.
 
 Note: `icon` field should always be an emoji (e.g. `"🔥"`), not a weather signal string. If a weather string (`"stormy"` etc.) is found in this field, it will render as text. Fix directly in `CB_data.json`.
+
+Cards are regenerated daily by `CB_update_stories.py --apply`. Do not manually edit `globalStories.cards` in `CB_data.json` — changes will be overwritten on next run.
+
+---
+
+## `instrument.story` data structure (updated 2026-03-22)
+
+```json
+{
+  "story": {
+    "expert": "..."
+  },
+  "story_generated_at": "2026-03-22",
+  "value_at_generation": 62.67
+}
+```
+
+`story.expert` is the paragraph shown in the instrument detail tooltip. Regenerated daily by `CB_update_stories.py --apply`. The `beginner` and `moderate` keys may still exist on older instruments — they are ignored by the UI (expert-only app).
 
 ---
 
@@ -342,7 +376,7 @@ Weekly digest generated from live dashboard data — stories, changelog, next 30
 ### Weekly publishing workflow
 
 1. `cd ~/Downloads/CARBONsnaps`
-2. Run daily refresh ritual (diff → sync → scenarios → build)
+2. Run daily refresh ritual (diff → sync → scenarios → stories → build)
 3. `open index.html` — click Digest button — Copy for Substack
 4. Go to `carbonsnaps.substack.com/publish/home` → Create → Article
 5. Paste content, add title (`CARBONsnaps — DD Month YYYY`) and subtitle
@@ -395,7 +429,11 @@ Fully removed. Direction is expressed exclusively in words: `Bullish`, `Bearish`
 
 ### Em-dash ban
 
-No em-dashes (`—`) anywhere in the app. `CB_update_scenarios.py` strips them at generation time. `CB_scrub_citetags.py` cleaned existing stored data. Enforce in any future content generation prompts.
+No em-dashes (`—`) anywhere in the app. `CB_update_scenarios.py` strips them at generation time. `CB_scrub_citetags.py` cleaned existing stored data. `CB_update_stories.py` strips them at generation time. Enforce in any future content generation prompts.
+
+### Instrument filter
+
+Removed 2026-03-22. Single click on instrument row opens tooltip. Future Option C (filter bar above tracker) deferred — implement when UI complexity justifies it.
 
 ### Audience
 
