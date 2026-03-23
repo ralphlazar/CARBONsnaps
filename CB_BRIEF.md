@@ -269,6 +269,20 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 - ✅ **`CB_update_stories.py` built** — new daily script regenerates all instrument tooltip stories (`story.expert` field, all 8 instruments) and all 3 global story cards (`globalStories.cards`) via Anthropic API. Reads current price, change percentages, regulatory signal, and relevant upcoming events per instrument. Uses Claude claude-opus-4-5. Writes back to `CB_data.json`. Preview mode (no `--apply`) calls API but does not write. Cost ~$0.10-0.20/day.
 - ✅ **Stray `.env` deleted** — `~/Downloads/CARBONsnaps/.env` deleted. Only canonical `.env` is `~/Desktop/.env`.
 
+## Completed items (session 2026-03-23)
+
+- ✅ **Subscribe button label** — updated to "SUBSCRIBE TO WEEKLY MAILOUT"
+- ✅ **Mobile: subscribe button overlap fixed** — `position:absolute` overridden on mobile; button sits below header as full-width block
+- ✅ **Mobile: regulatory tooltips fixed** — card click handlers were firing before cards were in the DOM; moved to after `innerHTML` assignment
+- ✅ **"Weekly Edition" removed** — span deleted from top bar
+- ✅ **Spark chart crosshair** — hover/touch on instrument tooltip spark chart shows vertical crosshair with price and date pill; flips left/right to stay in bounds
+- ✅ **Footer nav built** — three buttons (WHAT?, HOW?, LEGALESE) each open a modal panel; closes on X or click outside
+- ✅ **Footer modal content** — WHAT? and HOW? copy written and approved; LEGALESE contains Disclaimer and Privacy sections
+
+## Session notes
+
+- Claude: never issue `cp ~/Downloads/...` commands — user copies files manually.
+
 ---
 
 ## Instruments table — current column layout (updated 2026-03-22)
