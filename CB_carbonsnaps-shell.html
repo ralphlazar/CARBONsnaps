@@ -859,6 +859,49 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
   text-transform:uppercase;color:var(--text-lo);
   text-align:right;line-height:1.8;
 }
+.footer-nav{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  gap:0;flex-wrap:wrap;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:14px;
+}
+.footer-nav-btn{
+  background:none;border:none;cursor:pointer;
+  font-family:var(--font-display);font-size:9px;letter-spacing:1.8px;
+  text-transform:uppercase;color:var(--text-lo);
+  padding:5px 14px;transition:color .15s;position:relative;
+}
+.footer-nav-btn:not(:last-child)::after{
+  content:'';position:absolute;right:0;top:25%;height:50%;
+  width:1px;background:var(--border);
+}
+.footer-nav-btn:hover{color:var(--green)}
+/* Footer modal */
+.footer-modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;
+}
+.footer-modal-overlay.active{display:flex;align-items:center;justify-content:center;}
+.footer-modal{
+  background:#0d1d32;border:1px solid rgba(0,200,150,.25);border-radius:6px;
+  width:480px;max-width:calc(100vw - 32px);max-height:80vh;overflow-y:auto;
+  padding:28px 28px 24px;position:relative;animation:ttIn .15s ease-out;
+}
+.footer-modal-title{
+  font-family:var(--font-display);font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--green);margin-bottom:16px;
+}
+.footer-modal-body{
+  font-family:var(--font-body);font-size:13px;color:var(--text-mid);line-height:1.7;
+}
+.footer-modal-body p{margin:0 0 12px}
+.footer-modal-body p:last-child{margin-bottom:0}
+.footer-modal-body strong{color:var(--text-hi);font-weight:700;letter-spacing:.3px}
+.footer-modal-close{
+  position:absolute;top:12px;right:14px;background:none;border:none;
+  cursor:pointer;font-size:13px;color:var(--text-lo);padding:4px;
+}
+.footer-modal-close:hover{color:var(--text-hi)}
+@media(max-width:600px){
+  .footer-nav-btn{font-size:8px;letter-spacing:1.2px;padding:5px 10px;}
+}
 
 /* ── Glossary inline links ── */
 .gl-link{
@@ -1075,9 +1118,23 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
 
   <!-- ── Footer ── -->
   <footer class="site-footer" id="site-footer" style="display:none">
+    <div class="footer-nav">
+      <button class="footer-nav-btn" data-fmodal="what">WHAT?</button>
+      <button class="footer-nav-btn" data-fmodal="how">HOW?</button>
+      <button class="footer-nav-btn" data-fmodal="legalese">LEGALESE</button>
+    </div>
     <span class="footer-brand">CARBONsnaps</span>
     <span class="footer-meta" id="footer-meta"></span>
   </footer>
+
+  <!-- ── Footer modals ── -->
+  <div class="footer-modal-overlay" id="footer-modal-overlay">
+    <div class="footer-modal">
+      <button class="footer-modal-close" id="footer-modal-close">&#10005;</button>
+      <div class="footer-modal-title" id="footer-modal-title"></div>
+      <div class="footer-modal-body" id="footer-modal-body"></div>
+    </div>
+  </div>
 
 <!-- ── Glossary popup ── -->
 <!-- ── Glossary blackout overlay + popup ── -->
@@ -2392,6 +2449,57 @@ function renderFooter() {
   const ver = DATA._meta && DATA._meta.version ? DATA._meta.version : '';
   el.innerHTML = `${built ? 'Built: ' + escHtml(built) + '<br>' : ''}Version ${escHtml(ver)}`;
 }
+
+// ── Footer modals ──
+const FOOTER_MODAL_CONTENT = {
+  what: {
+    title: 'WHAT?',
+    body: `<p>CARBONsnaps is a live intelligence dashboard for environmental commodity markets.</p>
+<p>It tracks eight instruments across compliance carbon (EUA, UKA, CCA, RGGI), clean fuel credits (LCFS, RIN, 45Z), and voluntary carbon (VCM) - showing current prices, 52-week range, and policy price outlook for each.</p>
+<p>A regulatory tracker monitors 30+ upcoming policy events across EU, UK, US, and international frameworks, with AI-generated scenario analysis - bear, base, and bull - for every event.</p>
+<p>Daily market commentary is generated fresh each morning. Built for practitioners who already know the markets and need signal, not background.</p>`
+  },
+  how: {
+    title: 'HOW?',
+    body: `<p>CarbonSnaps pulls together market data and regulatory events from public sources daily.</p>
+<p>Briefings are generated from a custom automated pipeline and reviewed and edited before going live.</p>
+<p>The interface is intentionally minimal - the data speaks for itself.</p>`
+  },
+  legalese: {
+    title: 'LEGALESE',
+    body: `<p><strong>Disclaimer</strong></p>
+<p>All content, including market trends and economic insights, is provided for informational and educational purposes only and does not constitute financial, investment, or trading advice.</p>
+<p>Past performance is not indicative of future results. You must consult with a qualified financial advisor before making any investment decisions.</p>
+<p><strong>Privacy</strong></p>
+<p>CarbonSnaps does not sell, share, or distribute any personal data to third parties. We do not use tracking cookies for advertising purposes.</p>
+<p>Basic analytics may be collected to improve the service (e.g. page views, session duration).</p>
+<p>If you contact us via the form on this site, your name and email are used solely to respond to your message and are not added to any mailing list. We do not store financial data or personal investment information.</p>
+<p>By using this site, you consent to this policy. For questions or data removal requests, please use the contact form.</p>
+<p>© CARBONsnaps ${new Date().getFullYear()}. All rights reserved.</p>`
+  },
+};
+
+(function initFooterModals() {
+  const overlay = document.getElementById('footer-modal-overlay');
+  const titleEl = document.getElementById('footer-modal-title');
+  const bodyEl  = document.getElementById('footer-modal-body');
+  const closeBtn = document.getElementById('footer-modal-close');
+  if (!overlay) return;
+
+  document.querySelectorAll('.footer-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.fmodal;
+      const content = FOOTER_MODAL_CONTENT[key];
+      if (!content) return;
+      titleEl.textContent = content.title;
+      bodyEl.innerHTML = content.body;
+      overlay.classList.add('active');
+    });
+  });
+
+  closeBtn.addEventListener('click', () => overlay.classList.remove('active'));
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('active'); });
+})();
 
 // ── Story tooltip ──
 function openTooltip(inst) {
