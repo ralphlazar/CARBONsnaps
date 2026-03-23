@@ -318,6 +318,20 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
   height:126px;position:relative;
 }
 .st-spark{display:block}
+.st-spark-hover{
+  display:none;position:absolute;pointer-events:none;
+  top:10px;bottom:1px;width:1px;
+  background:rgba(255,255,255,0.15);
+}
+.st-spark-hover-pill{
+  position:absolute;left:6px;top:0;
+  background:#0d1d32;border:1px solid rgba(255,255,255,0.18);
+  border-radius:3px;padding:3px 7px;white-space:nowrap;
+  font-family:var(--font-display);font-size:10px;letter-spacing:.4px;
+  color:var(--text-hi);line-height:1.5;pointer-events:none;
+}
+.st-spark-hover-pill .shp-price{color:var(--green)}
+.st-spark-hover-pill .shp-date{color:var(--text-lo);font-size:9px;display:block}
 
 /* ── Regulatory table ── */
 .reg-box{
@@ -1492,6 +1506,52 @@ function renderTooltipSpark(inst) {
         animation: false,
       },
     });
+
+    // ── Crosshair hover overlay ──
+    const hoverLine = document.getElementById('tt-spark-hover');
+    const pill      = document.getElementById('tt-spark-pill');
+    const wrap      = canvas.parentElement;
+    const prices    = inst.spark.map(p => typeof p === 'object' ? p.close : p);
+    const dates     = inst.spark.map(p => (typeof p === 'object' && p.date) ? p.date : '');
+
+    function showCrosshair(clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      if (x < 0 || x > rect.width) { hoverLine.style.display = 'none'; return; }
+
+      // Find nearest data point
+      const chartArea = tooltipSparkChart.chartArea;
+      const pct = Math.max(0, Math.min(1, (x - chartArea.left) / (chartArea.right - chartArea.left)));
+      const idx = Math.round(pct * (prices.length - 1));
+      const price = prices[idx];
+      const date  = dates[idx] || '';
+      if (price == null) return;
+
+      // Position crosshair line (relative to wrap, offset by 16px left padding)
+      const wrapRect = wrap.getBoundingClientRect();
+      const lineX = clientX - wrapRect.left;
+      hoverLine.style.left  = lineX + 'px';
+      hoverLine.style.display = 'block';
+
+      // Format price
+      const priceStr = price >= 1000 ? (price/1000).toFixed(2)+'k' : price.toFixed(2);
+      const dateStr  = date.slice(0,10);
+      pill.innerHTML = `<span class="shp-price">${priceStr}</span><span class="shp-date">${dateStr}</span>`;
+
+      // Flip pill left/right so it stays in bounds
+      const pillW = 80;
+      pill.style.left = (lineX + wrapRect.width - wrapRect.left > wrapRect.width - pillW - 10)
+        ? (-pillW - 4) + 'px' : '6px';
+    }
+
+    canvas.addEventListener('mousemove', e => showCrosshair(e.clientX, e.clientY));
+    canvas.addEventListener('mouseleave', () => { hoverLine.style.display = 'none'; });
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      showCrosshair(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+    canvas.addEventListener('touchend', () => { hoverLine.style.display = 'none'; });
   }, 0);
 }
 
@@ -2381,6 +2441,9 @@ function buildTooltipHTML(inst) {
     ${inst.spark && inst.spark.length ? `
     <div class="st-spark-wrap">
       <canvas class="st-spark" id="tt-spark" width="388" height="110"></canvas>
+      <div class="st-spark-hover" id="tt-spark-hover">
+        <div class="st-spark-hover-pill" id="tt-spark-pill"></div>
+      </div>
     </div>` : ''}
     <div class="st-body" id="st-body">
       ${splitBody((inst.story && inst.story.expert) || 'No story available.')}
