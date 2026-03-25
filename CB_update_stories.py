@@ -41,7 +41,7 @@ def scrub(text):
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
-def call_claude(prompt):
+def call_claude(prompt, max_tokens=MAX_TOKENS):
     import urllib.request
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
@@ -49,7 +49,7 @@ def call_claude(prompt):
         sys.exit(1)
     payload = json.dumps({
         "model": MODEL,
-        "max_tokens": MAX_TOKENS,
+        "max_tokens": max_tokens,
         "messages": [{"role": "user", "content": prompt}]
     }).encode()
     req = urllib.request.Request(
@@ -254,7 +254,7 @@ def main():
 
     prompt = build_global_stories_prompt(instruments, reg_events)
     try:
-        raw = call_claude(prompt)
+        raw = call_claude(prompt, max_tokens=1600)
         # Strip any accidental markdown fences
         raw = re.sub(r"^```[a-z]*\n?", "", raw.strip())
         raw = re.sub(r"\n?```$", "", raw.strip())
