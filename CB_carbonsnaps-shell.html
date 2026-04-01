@@ -1197,10 +1197,14 @@ fetch('data.json')
 function init() {
   document.getElementById('loading-state').style.display = 'none';
 
-  // Build date
-  if (DATA._meta && DATA._meta.generated) {
-    document.getElementById('build-date').textContent = DATA._meta.generated;
-  }
+  // Build date — always show today's date
+  (function() {
+    const now = new Date();
+    const d = now.getDate().toString().padStart(2,'0');
+    const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][now.getMonth()];
+    const y = now.getFullYear();
+    document.getElementById('build-date').textContent = d + ' ' + m + ' ' + y;
+  })();
 
   renderBriefing();
   renderInstruments();
