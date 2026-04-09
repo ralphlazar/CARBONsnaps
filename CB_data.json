@@ -8,7 +8,7 @@
       "weekly": "Update weekly — price consensus, regulatory signals, stories",
       "structural": "Update on major regulatory decision or market structure change"
     },
-    "built_at": "2026-04-09 12:27"
+    "built_at": "2026-04-09 12:38"
   },
   "instruments": [
     {
@@ -18,77 +18,21 @@
       "market": "Compliance",
       "jurisdiction": "EU",
       "description": "European Union Emissions Trading System allowances. Each permit covers one tonne of CO2. The world's largest carbon market.",
-      "price": "62.67",
+      "price": "67.66",
       "price_unit": "GBP (CO2.L ETF proxy)",
-      "change_1w": "-8.9%",
-      "change_1m": "-6.3%",
-      "change_3m": "-23.7%",
+      "change_1w": "-3.6%",
+      "change_1m": "+1.3%",
+      "change_3m": "-18.3%",
       "regulatory_signal": "Mixed",
       "regulatory_note": "Market Stability Reserve review ongoing. Outcome expected Q3 2026.",
-      "last_updated": "2026-03-17",
+      "last_updated": "2026-04-08",
       "story": {
         "beginner": "EU carbon allowances (EUAs) have fallen sharply, dropping nearly 9% in just one week and losing almost a quarter of their value over three months. This means it is becoming cheaper for companies to buy permission to emit carbon dioxide in Europe, which typically happens when markets worry about lower industrial activity or oversupply.",
         "moderate": "EUA prices have contracted significantly across all timeframes, with the steepest decline (23.7%) occurring over three months, signalling bearish sentiment on near-term compliance demand. The weakness reflects softer economic outlook expectations and potential supply concerns ahead of the Market Stability Reserve (MSR) review due in Q3 2026, which could alter the mechanics of how allowances are released into the market. Current pricing at 62.67 EUR/tonne sits at multi-month lows, testing support levels that may trigger tactical positioning shifts.",
-        "expert": "EUAs have shed nearly a quarter of their value over three months, with the CO2.L proxy now at 62.67 GBP, despite a structurally bullish regulatory backdrop. The disconnect between price action and fundamentals reflects macro headwinds and demand uncertainty overwhelming the tightening supply trajectory; the 4.3% Linear Reduction Factor is in effect, CBAM's financial phase is live with free allocation phase-out beginning at 2.5% for 2026, and maritime compliance has stepped up to 100% surrender obligations. The April surrender deadline in 21 days should provide near-term support as compliance buyers cover any shortfall against 2025 verified emissions. However, the Market Stability Reserve review, with outcomes expected in Q3 2026, introduces material uncertainty around intake thresholds and cancellation mechanisms that could reshape the supply curve. Monitor EU registry data closely through the surrender window, and track stakeholder submissions ahead of the 4 May consultation close for early signals on post-2030 scope expansion and cap stringency."
+        "expert": "EUAs have shed 18.3% over the past three months despite a structurally bullish regulatory framework, reflecting macro headwinds and demand uncertainty that have overpowered the tightening supply narrative. The 4.3% Linear Reduction Factor remains in effect, compressing the cap faster than any prior phase, while the CBAM free allocation phase-out has begun its 2.5% annual reduction trajectory toward a near-50% cut by 2030. Maritime full compliance is now active, adding roughly 30% to surrender obligations versus 2025, though verified emissions data will determine whether this translates to net buying pressure. The annual surrender deadline in three weeks presents a near-term catalyst; any shortfall against verified 2025 emissions will force spot accumulation and tighten the physical market. The Market Stability Reserve review outcome in Q3 remains the key variable for medium-term price discovery, with potential adjustments to intake thresholds or cancellation mechanisms. Monitor registry surrender data weekly and track stakeholder submissions ahead of the 4 May consultation close for signals on post-2030 scope expansion."
       },
-      "value_at_generation": "62.67",
+      "value_at_generation": "67.66",
       "spark": [
-        {
-          "date": "2023-04-03",
-          "close": 91.985
-        },
-        {
-          "date": "2023-04-04",
-          "close": 91.405
-        },
-        {
-          "date": "2023-04-05",
-          "close": 92.85
-        },
-        {
-          "date": "2023-04-06",
-          "close": 92.84
-        },
-        {
-          "date": "2023-04-11",
-          "close": 94.325
-        },
-        {
-          "date": "2023-04-12",
-          "close": 92.305
-        },
-        {
-          "date": "2023-04-13",
-          "close": 90.77
-        },
-        {
-          "date": "2023-04-14",
-          "close": 90.225
-        },
-        {
-          "date": "2023-04-17",
-          "close": 89.345
-        },
-        {
-          "date": "2023-04-18",
-          "close": 91.845
-        },
-        {
-          "date": "2023-04-19",
-          "close": 91.025
-        },
-        {
-          "date": "2023-04-20",
-          "close": 88.315
-        },
-        {
-          "date": "2023-04-21",
-          "close": 86.36
-        },
-        {
-          "date": "2023-04-24",
-          "close": 85.3
-        },
         {
           "date": "2023-04-25",
           "close": 83.36
@@ -3020,6 +2964,62 @@
         {
           "date": "2026-03-17",
           "close": 62.675
+        },
+        {
+          "date": "2026-03-18",
+          "close": 62.395
+        },
+        {
+          "date": "2026-03-19",
+          "close": 59.965
+        },
+        {
+          "date": "2026-03-20",
+          "close": 63.635
+        },
+        {
+          "date": "2026-03-23",
+          "close": 65.095
+        },
+        {
+          "date": "2026-03-24",
+          "close": 67.065
+        },
+        {
+          "date": "2026-03-25",
+          "close": 66.865
+        },
+        {
+          "date": "2026-03-26",
+          "close": 67.405
+        },
+        {
+          "date": "2026-03-27",
+          "close": 67.395
+        },
+        {
+          "date": "2026-03-30",
+          "close": 68.1
+        },
+        {
+          "date": "2026-03-31",
+          "close": 68.11
+        },
+        {
+          "date": "2026-04-01",
+          "close": 70.2
+        },
+        {
+          "date": "2026-04-02",
+          "close": 67.205
+        },
+        {
+          "date": "2026-04-07",
+          "close": 67.425
+        },
+        {
+          "date": "2026-04-08",
+          "close": 67.66
         }
       ],
       "story_generated_at": "2026-04-09"
@@ -3042,7 +3042,7 @@
       "story": {
         "beginner": "California Carbon Allowances (CCAs) are permits that allow companies to emit one tonne of greenhouse gas. They're currently trading at $28.32 per tonne, down 1.5% over the past week and month. The price has stayed relatively stable because California's rules include a price floor that prevents them from falling too far.",
         "moderate": "CCAs have declined 1.5% over one week and one month, holding above the regulatory floor price of $20 per tonne, which provides a mechanical support level in the California cap-and-trade system. The modest downward pressure reflects uncertainty around the 2026 cap adjustment currently under California Air Resources Board (CARB) review, which will reset the total allowances available for the next compliance period. With regulatory signals cloudy, the market is likely pricing in cautious sentiment ahead of clarity on stringency and supply allocation.",
-        "expert": "California Carbon Allowances have traded flat to slightly weaker over the past quarter, with the 1.5% decline across all measured timeframes suggesting range-bound conditions amid mixed regulatory signals. At $28.32 per tonne, CCAs maintain comfortable headroom above the 2026 auction reserve price of approximately $20.72, though the structural floor mechanism continues to anchor downside expectations. Near-term price action reflects market uncertainty as CARB reviews the 2026 cap adjustment, with participants awaiting clarity on allowance supply trajectories. The more consequential catalyst lies in the post-2030 rulemaking process, now roughly 83 days out, where the cap decline trajectory to 2045 will fundamentally reshape long-dated compliance economics. While programme extension carries broad political support following AB 32 and SB 32, the stringency of post-2030 caps remains the critical variable for price discovery. Compliance desks should monitor CARB workshop outputs and staff proposals for early signals on cap tightening ambition, as aggressive trajectories could trigger a repricing of forward vintage allowances."
+        "expert": "California Carbon Allowances are trading at $28.32 per tonne, showing persistent weakness with a 1.5% decline across one-week, one-month, and three-month horizons, suggesting a market in consolidation rather than active selling pressure. The 2026 auction reserve price floor at approximately $20.72 per tonne provides meaningful downside support, limiting near-term tail risk while the spread to current spot prices reflects ongoing uncertainty around CARB's 2026 cap adjustment review. Regulatory signals remain mixed as the market awaits clarity on allowance supply trajectories, though the structural 5% plus inflation annual floor escalation continues to anchor long-term price expectations. The post-2030 rulemaking process, expected to conclude within approximately 83 days, represents the primary catalyst for directional moves; a steeper cap trajectory would tighten supply expectations and support prices above current levels. Traders should monitor CARB workshop outputs and draft rule language for signals on post-2030 ambition, as this will determine whether CCAs break out of their current range or remain anchored near the floor premium."
       },
       "value_at_generation": "28.32",
       "spark": [
@@ -3111,11 +3111,11 @@
       "change_3m": "-15.5%",
       "regulatory_signal": "Mixed",
       "regulatory_note": "UK-EU ETS linking feasibility study due 2026. Outcome would significantly affect pricing.",
-      "last_updated": "2026-03-18",
+      "last_updated": "2024-12-11",
       "story": {
         "beginner": "UK Allowances (UKA) are tradeable permits that allow companies to emit carbon dioxide in the UK. The price has fallen to 34.55 GBP per tonne this week, down 2.7% from last week and 15.5% over three months, suggesting weakening demand or oversupply in the market.",
         "moderate": "UK Allowances have declined 5.9% over the month and 15.5% over three months, reaching 34.55 GBP/tonne, reflecting softer sentiment in the compliance segment. The downward pressure may reflect expectations around the EU-UK ETS linking feasibility study due in 2026, which could restructure the market significantly. Until clarity emerges on linkage terms, price discovery remains uncertain and participants are likely adopting cautious positioning.",
-        "expert": "UKA has sold off sharply, down 15.5% over three months to 34.55 GBP/tonne, reflecting persistent discount pressure relative to EUA and uncertainty around the UK-EU linking timeline. The near-term floor is structurally supported by the Auction Reserve Price increase from £22 to £28, with GDP Deflator indexation from 2027 locking in real-terms escalation; this creates a harder downside boundary than current spot levels suggest. Maritime expansion launching mid-year introduces new compliance demand, though double-surrender deferrals push material auction impact into Q3 and beyond. The pivotal variable remains the UK-EU ETS linking feasibility study due in approximately three months; a positive outcome would reprice UKA toward EUA convergence, while failure or delay extends the standalone discount regime. Watch the feasibility study language closely for governance alignment signals, particularly on mutual cap recognition, as this determines whether the current 30%+ discount to EUA narrows or persists through 2027."
+        "expert": "UKA continues to slide, down 15.5% over three months to £34.55/tonne, as the market drifts in a regulatory vacuum ahead of key structural decisions. The price weakness persists despite unambiguously bullish medium-term fundamentals: the Auction Reserve Price rise to £28 from 2027 with GDP Deflator indexation, maritime expansion launching mid-year with double-surrender provisions, and CBAM implementation in early 2027 all point to tightening supply-demand dynamics. The disconnect reflects uncertainty around UK-EU ETS linking; the feasibility study due in 83 days will determine whether UKA converges toward EUA pricing or remains a smaller, more volatile standalone market. Current levels imply deep scepticism about linking materialising, creating asymmetric upside if negotiations progress favourably. Near-term, watch the feasibility study language on mutual cap recognition and governance frameworks; a constructive outcome would compress the £15+ discount to EUA and trigger significant repositioning."
       },
       "value_at_generation": "34.55",
       "spark": [
@@ -3340,7 +3340,7 @@
       "story": {
         "beginner": "CORSIA credits cost around 6.40 dollars per tonne. Airlines must buy these credits to offset the growth in their CO2 emissions above 2019 levels. As air travel keeps recovering from COVID lows, airlines need more credits, pushing prices higher.",
         "moderate": "CORSIA credits at 6.40 USD/tonne have risen 12% over three months as aviation demand recovery drives offsetting obligations higher. Phase 1 (2024-2026) covers voluntary participants, with Phase 2 (2027+) becoming mandatory. The eligible fuels criteria update mid-2026 is worth watching: if ICAO broadens the list of qualifying credits, supply could increase and cap price appreciation. Supply is currently constrained by the narrow list of CORSIA-eligible credit types.",
-        "expert": "CORSIA credits have gained 12.3% over three months, driven by recovering aviation demand and tightening supply dynamics as Phase 1 obligations accumulate toward the 2026 settlement deadline. The current $6.40/tonne price reflects modest but real compliance demand from 93 participating states, though the COVID-adjusted baseline continues to suppress offsetting requirements relative to pre-pandemic projections. ICAO's ongoing eligible emissions unit standards review presents asymmetric risk; any tightening of quality criteria would constrict supply and support prices, while programme expansion would pressure the market. The EU ETS stop-the-clock assessment in early July represents the nearest binary event, with a negative CORSIA determination potentially triggering ETS extension to extra-European routes and redirecting airline hedging toward EUAs. The Phase 1 to Phase 2 transition in early 2027, combined with expected baseline recalculation and updated eligibility criteria, is already generating forward supply uncertainty. Watch the mid-2026 eligible fuels criteria update and COP31 progress on Article 6.4 issuance timelines for directional signals into year-end."
+        "expert": "CORSIA credits have firmed 12.3% over three months to $6.40/t, reflecting tightening supply dynamics as Phase 1 compliance demand materializes across 93 participating states. The price momentum is structurally supported by ICAO's ongoing eligible emissions unit standards review; any tightening of quality criteria would constrict the eligible supply pool and amplify upward pressure. Near-term volatility hinges on the EU's CORSIA assessment in early July, where a negative determination could trigger ETS extension to extra-European departures, redirecting airline hedging toward EUAs and fragmenting demand signals. The Phase 1 to Phase 2 transition in early 2027 introduces baseline recalculation risk and potential supply crunch in eligible units, particularly if Article 6.4 rulebook finalization at COP31 Belém fails to deliver scaled A6.4ER issuance in time for CORSIA eligibility windows. Watch the mid-2026 eligible fuels criteria update closely; expanded SAF crediting pathways could reshape the offset-versus-abatement calculus for compliance buyers through 2027."
       },
       "value_at_generation": "6.40",
       "spark": [],
@@ -3364,7 +3364,7 @@
       "story": {
         "beginner": "California LCFS credits, which reward cleaner fuels, have fallen to $57 per credit as the market faces uncertainty. The state is consulting on new rules that could change how credits are valued, so traders are holding back until they know what's coming.",
         "moderate": "LCFS credits have declined 1.7% over one week, one month, and three months, suggesting sustained selling pressure as market participants await CARB's 2030 pathway consultation. The regulatory signal is stormy: any material reset to the carbon intensity benchmark could alter credit generation rates and scarcity dynamics. Current weakness reflects hesitation ahead of potential rule changes that may either restore or further compress credit values.",
-        "expert": "LCFS credits remain under pressure at $57/credit, down 1.7% across the one-week, one-month, and three-month horizons, reflecting persistent bearish sentiment despite structural tightening now in effect. The July 2025 step-change implementing a 9% CI benchmark reduction under CARB's 2024 amendments has begun eroding the accumulated credit bank, which transitioned from net surplus to net deficit in Q3 2025. However, the pace of bank drawdown has been slower than some market participants anticipated, keeping prices subdued as compliance entities assess whether deficit generation will accelerate sufficiently to trigger the Automatic Acceleration Mechanism in 2027. The ongoing 2030 pathway consultation introduces additional uncertainty; a more aggressive CI trajectory reset could restore credit value, but timing and stringency remain speculative. Forward-looking traders should monitor quarterly credit bank data closely, as the rate of deficit accumulation through 2026 will determine whether AAM activation becomes a near-term pricing catalyst or remains a medium-term consideration."
+        "expert": "LCFS credits remain under pressure at $57/credit, extending a 1.7% decline across all measured timeframes despite the structural tightening that took effect in July 2025. The 9% step-change in carbon intensity benchmarks under CARB's re-adopted regulation has begun converting the credit bank from net surplus to net deficit, yet prices have not yet reflected this fundamental shift; market participants appear to be waiting for visible quarterly drawdown data before repricing. The first full compliance year under the amended regulation will be the critical test, as the pace of credit bank erosion through 2026 determines whether the Automatic Acceleration Mechanism triggers in 2027, which would impose further CI tightening and potentially catalyze a sharper price recovery. Current weakness may reflect residual legacy credit overhang and uncertainty around CARB's 2030 pathway consultation, which could reset benchmarks more aggressively. Watch Q2 and Q3 compliance reports for bank depletion velocity; confirmation of net deficit conditions should provide the fundamental catalyst that current prices are discounting."
       },
       "value_at_generation": "57.0",
       "spark": [
@@ -3437,7 +3437,7 @@
       "story": {
         "beginner": "RINs are credits that oil refiners must buy to prove they have blended enough renewable fuel into petrol and diesel. The D6 benchmark currently trades at around 68 cents. When the EPA sets higher blending requirements, refiners need more RINs and prices rise.",
         "moderate": "D6 RINs at 0.68 USD are range-bound ahead of the EPA's 2026 Renewable Volume Obligation final rule. The RVO level is the primary price driver: a higher obligation requires refiners to surrender more RINs, tightening supply and pushing prices up. D3 (cellulosic) RINs command a significant premium at approximately 2.80 USD, reflecting scarcer supply from advanced biofuel producers. Small refinery exemptions remain a wildcard: if the EPA grants more exemptions, effective demand for RINs falls.",
-        "expert": "D6 RINs have reclaimed ground over the past month, rising 3.0% to 0.68 USD/RIN, though the quarterly trend remains negative at minus 4.2%, reflecting persistent uncertainty around EPA's pending 2026 volume obligations. The structural bid stems from obligated party positioning ahead of the final RVO rule, where higher mandated blending volumes would directly tighten RIN supply and support prices across the D4, D5, and D6 complex. Complicating the outlook, IRS 45Z clean fuel production credit guidance remains interim, leaving renewable fuel producers without clarity on lifecycle accounting for key pathways; final methodology could shift production economics and indirectly influence RIN generation rates. The current administration's biofuels posture appears supportive, but the mixed regulatory signal underscores execution risk until RVO levels are locked. Market participants should focus on EPA timeline signals for the 2026 to 2028 rulemaking and any acceleration of 45Z lifecycle finalization, as convergence of these two drivers will set the directional tone for Q2 and Q3 positioning."
+        "expert": "D6 RINs have recovered 3.0% over the past month to $0.68, recouping some of the 4.2% quarterly decline as market participants position ahead of EPA's pending final rule on 2026 volume obligations. The near-term price trajectory hinges almost entirely on RVO levels; higher conventional renewable fuel mandates would mechanically tighten the RIN supply-demand balance and support prices above current levels, while a dovish outcome could push D6 back toward recent lows. Regulatory signals remain mixed, with the administration's biofuels posture still unclear and obligated parties maintaining defensive compliance positions rather than building speculative length. The parallel development of IRS 45Z guidance introduces a secondary variable, as final lifecycle methodology determinations for ethanol pathways could shift producer economics and indirectly influence RIN generation rates. Traders should monitor EPA rulemaking timelines closely; any indication of RVO direction in pre-publication materials or stakeholder briefings will likely move the market before formal announcement."
       },
       "value_at_generation": "0.68",
       "spark": [],
@@ -3461,7 +3461,7 @@
       "story": {
         "beginner": "The 45Z credit is a new US government incentive that pays fuel producers for making cleaner transportation fuels. The cleaner the fuel, the larger the credit. It is still new and the exact rules are not fully finalised, creating uncertainty for fuel producers planning investments.",
         "moderate": "45Z replaced the Blenders Tax Credit in 2025 and is structured as a production credit rather than a blending credit, shifting the incentive from blenders to producers. The credit value is inversely linked to carbon intensity: fuels below 50g CO2e per MJ qualify, with higher credits for lower-CI fuels. IRS guidance finalisation is the critical near-term event. Uncertainty around the GREET model update and international feedstock eligibility has delayed investment decisions across the sustainable aviation fuel and renewable diesel sectors.",
-        "expert": "The 45Z Clean Fuel Production Credit remains structurally untradeable in any standardized form, with credit values fluctuating based on individual fuel pathway carbon intensities and producer-specific lifecycle analyses. The absence of finalized IRS guidance on lifecycle methodology creates substantial basis risk for market participants attempting to price forward credit value, particularly for sustainable aviation fuel and hydrogen pathways where interim rules leave significant calculation ambiguity. Credits are claimed directly by producers rather than generating transferable instruments, limiting secondary market development and concentrating value capture at the refinery level. The variable credit structure, ranging from $0.20 to $1.00 per gallon depending on emissions intensity relative to the 50 kg CO2e per mmBTU baseline, rewards low-carbon producers but complicates portfolio hedging strategies for compliance buyers accustomed to fixed-value instruments. Market participants should monitor IRS rulemaking timelines closely; final guidance on GREET model adoption and indirect land use change accounting will determine which fuel pathways capture maximum credit value and whether sufficient standardization emerges to support liquid trading."
+        "expert": "The 45Z Clean Fuel Production Credit remains in a state of structural uncertainty, with no standardized price discovery possible given the credit's variable nature tied to individual fuel pathway carbon intensities. The IRS has yet to finalize lifecycle methodology guidance for key pathways including sustainable aviation fuel and hydrogen, leaving producers unable to calculate definitive credit values and creating significant basis risk for forward commitments. Under the current interim framework, credits range from partial to full value depending on emissions reductions relative to baseline, but the absence of codified GREET model parameters for emerging feedstocks has stalled bankable project economics. Market participants report hesitancy in offtake negotiations as counterparties await clarity on eligible fuel definitions and verification protocols. The regulatory signal leans bearish given prolonged administrative delays and political headwinds surrounding IRA implementation. Watch for IRS final rulemaking, expected to address SAF multiplier treatment and indirect land use change factors, as the primary catalyst for unlocking liquidity in this nascent credit class."
       },
       "value_at_generation": "—",
       "spark": [],
@@ -3485,7 +3485,7 @@
       "story": {
         "beginner": "Voluntary carbon credits are environmental certificates that companies buy to offset their emissions outside of government regulations. The price of nature-based credits has risen 2.5% over the past week, month, and three months, suggesting modest buyer demand as climate commitments remain in focus.",
         "moderate": "Nature-based voluntary carbon credits (VCM) have appreciated 2.5% across all measured timeframes, settling at USD 6.5/tonne. The steady gains reflect stable demand from corporate net-zero commitments, though the regulatory environment remains uncertain. Verra's updated REDD+ methodology and potential Article 6 bilateral agreements could shift supply allocation toward compliance markets, which may tighten voluntary supply pools if governments prioritise international emissions trading.",
-        "expert": "Voluntary carbon credits have posted a modest 2.5% gain across all timeframes, suggesting the market is stabilizing after the prolonged credibility crisis triggered by REDD+ additionality concerns, though the muted price action at 6.5 USD/tonne reflects persistent buyer hesitation. The ongoing Verra VM0042 methodology update remains the dominant structural overhang; while tighter baselines and monitoring requirements should eventually restore institutional confidence, near term supply uncertainty continues to compress premiums across nature-based project types. Article 6 bilateral agreements present a material bifurcation risk, as host countries increasingly channel high-integrity credits toward corresponding adjustments for compliance buyers, potentially stranding lower-quality inventory in the voluntary segment. ICAO's CORSIA eligible emissions unit standards review adds upside optionality if quality criteria tighten, though any expansion of approved programmes would dilute pricing power. Watch COP31 progress on Article 6.4 rulebook finalization closely; meaningful A6.4ER issuance would reshape the supply hierarchy and force a repricing of legacy VCS and Gold Standard credits relative to Paris-aligned units."
+        "expert": "Voluntary carbon credits are showing modest but consistent upward momentum, with prices climbing 2.5% across weekly, monthly, and quarterly intervals to reach 6.5 USD/tonne, suggesting the market may be finding a floor after the credibility crisis triggered by REDD+ additionality scrutiny. The ongoing Verra VM0042 methodology overhaul continues to weigh on sentiment, as revised baselines and monitoring requirements under the updated REDD+ framework threaten to constrain issuance volumes from legacy projects. However, the regulatory picture is complicated by Article 6 bilateral agreements, which could siphon higher-integrity supply toward compliance channels, effectively tightening voluntary market availability. CORSIA's eligible emissions unit standards review adds another supply-side variable; any restriction of approved programmes would compress EEU eligibility and create upward price pressure for qualifying credits. COP31 in Belém represents the critical inflection point, with Article 6.4 supervisory body progress determining whether centralised mechanism credits reach scale in time to reshape both compliance and voluntary market dynamics."
       },
       "value_at_generation": "6.5",
       "spark": [
@@ -5168,25 +5168,25 @@
   "globalStories": {
     "cards": [
       {
-        "icon": "📉",
-        "headline": "EUA Rout Deepens Ahead of Surrender Deadline",
-        "label": "EUA Rout Deepens Ahead of Surrender Deadline",
-        "body": "EU allowances have shed nearly a quarter of their value over three months, with the weekly decline accelerating to 8.9% as the 30 April surrender deadline approaches. The sell-off defies typical pre-compliance seasonality, where obligated entities historically bid up spot prices to cover verified emissions. Industrial demand destruction, mild weather reducing power sector burn, and ample free allocation carry-over appear to be overwhelming any compliance-driven support. The upcoming Market Stability Reserve review, expected to deliver a legislative proposal by July, looms as the next structural catalyst; most stakeholders anticipate tighter intake thresholds, but until the Commission acts, surplus perceptions dominate sentiment. Registry data over the next three weeks will be critical, as any shortfall between surrendered allowances and verified emissions could trigger a sharp reversal. For now, the path of least resistance remains lower, with technical support levels from 2023 being tested. Traders should monitor auction cover ratios and secondary market volumes for early signs of compliance stress.",
-        "source": "ICE Endex, EU Transaction Log, European Commission MSR consultation"
+        "icon": "🇪🇺",
+        "headline": "EUA Surrender Deadline Looms Amid Price Slump",
+        "label": "EUA Surrender Deadline Looms Amid Price Slump",
+        "body": "European Union Allowances have shed 18.3% over three months, now trading at 67.66 GBP via the CO2.L ETF proxy, yet the annual surrender deadline for 2025 emissions arrives in just 21 days. This creates a near-term bullish dynamic as compliance buyers must close any shortfall against verified emissions. Registry data will be critical; any gap between holdings and obligations amplifies spot demand. The broader backdrop remains challenging, with industrial output softness and mild weather depressing baseline demand. However, the upcoming EU Market Stability Reserve review and post-2030 revision proposal introduce structural uncertainty that keeps institutional positioning cautious. The Commission's July proposal will clarify the scope of carbon removals inclusion and aviation free allocation phase-out, both pivotal for long-dated pricing. Until then, the market remains in a holding pattern, caught between immediate compliance mechanics and unresolved policy architecture. Traders should monitor EU Transaction Log data closely as the 30 April deadline approaches.",
+        "source": "ICE Futures Europe, EU Transaction Log, European Commission consultation documents"
       },
       {
         "icon": "✈️",
-        "headline": "CORSIA Bucks Trend as Aviation Catalyst Nears",
-        "label": "CORSIA Bucks Trend as Aviation Catalyst Nears",
-        "body": "CORSIA-eligible credits continue to diverge from the broader compliance malaise, posting a 12.3% gain over three months while voluntary carbon benchmarks languish. The approaching EU stop-the-clock expiry and mandatory CORSIA assessment create a binary risk event with substantial price implications. A negative EU assessment of CORSIA's environmental integrity could trigger the extension of EU ETS to extra-European departures, effectively shrinking CORSIA's addressable market while boosting EUA aviation demand. Conversely, a positive assessment would cement CORSIA as the default mechanism for international aviation offsets, validating current price appreciation. Airlines are building strategic positions in anticipation, with eligible credit inventories reportedly thinning among major project developers. The 6.40 USD per tonne level reflects this optionality premium, though it remains modest relative to compliance-grade instruments. Market participants should track ICAO technical working group outputs and EU DG CLIMA statements over the coming weeks for directional signals. The outcome will set the structural framework for aviation carbon costs through the decade.",
-        "source": "ICAO CORSIA registry, EU DG CLIMA, S&P Global Platts"
+        "headline": "CORSIA Outperforms as Aviation Assessment Nears",
+        "label": "CORSIA Outperforms as Aviation Assessment Nears",
+        "body": "CORSIA credits have posted a 12.3% gain over three months to reach 6.40 USD per tonne, making them the standout performer in an otherwise subdued carbon complex. The bullish signal reflects anticipation around the EU's stop-the-clock expiry and formal CORSIA assessment due in 83 days. The outcome is binary and consequential: a negative assessment could trigger EU ETS extension to extra-European departures, fundamentally reshaping demand dynamics for both CORSIA units and EUAs. Airlines are hedging against this optionality, supporting CORSIA prices even as voluntary market credits trade sideways at 6.5 USD per tonne. The spread between CORSIA and generic VCM credits has narrowed, suggesting buyers are pricing in CORSIA's regulatory standing and eligibility certainty. ICAO's baseline recalibration and eligible unit criteria remain under scrutiny from European policymakers. For compliance desks, the asymmetric risk profile favours building CORSIA inventory now rather than chasing supply post-decision.",
+        "source": "ICAO CORSIA registry, European Commission aviation policy updates, ICE aviation carbon indices"
       },
       {
-        "icon": "🚢",
-        "headline": "UK Maritime Expansion Priced In, Deferred Impact",
-        "label": "UK Maritime Expansion Priced In, Deferred Impact",
-        "body": "UK allowances remain under pressure at 34.55 GBP, down 15.5% over three months, despite the confirmed maritime expansion launching in 83 days. The double-surrender mechanism for year one, requiring two UKAs per tonne of verified shipping emissions, deliberately defers the financial burden to give operators compliance runway. This phasing means the demand uplift is certain but back-loaded, limiting immediate price support. Shipping companies are currently focused on MRV preparations rather than active hedging, with most expected to enter the market aggressively only once verified emissions data crystallises in early 2027. The UK-EU ETS linking feasibility study, running in parallel, adds a layer of strategic ambiguity; harmonised treatment of maritime under a linked scheme could alter optimal hedging strategies. For now, UKA weakness reflects broader European carbon sentiment and persistent oversupply concerns rather than scepticism about maritime inclusion. Watch for secondary legislation detailing voyage allocation methodologies, as this will determine which routes and vessel classes face the steepest compliance costs.",
-        "source": "UK ETS Authority, ICE Futures Europe, UK Department for Energy Security"
+        "icon": "🇬🇧",
+        "headline": "UK Carbon Slides Ahead of Maritime Expansion",
+        "label": "UK Carbon Slides Ahead of Maritime Expansion",
+        "body": "UK Allowances have fallen 15.5% over three months to 34.55 GBP per tonne, diverging sharply from the bullish catalyst that maritime expansion represents. The UK ETS will incorporate shipping from mid-2026, with double-surrender requirements in year one designed to smooth the compliance burden. This structural demand injection is certain, yet the market trades as if it does not exist, weighed down by near-term oversupply and limited speculative appetite. The ongoing UK-EU ETS linking feasibility study adds another layer of complexity; political will exists on both sides, but cap-setting harmonisation and mutual recognition remain unresolved. A linked market would transform UKA liquidity and pricing dynamics, potentially closing the discount to EUAs. For now, the UKA market remains thin and policy-sensitive, offering asymmetric upside for patient capital willing to warehouse allowances through the maritime launch. Compliance entities should consider forward hedging given the structural tightening ahead.",
+        "source": "ICE Futures Europe, UK ETS Authority announcements, UK-EU linking feasibility study"
       }
     ],
     "last_updated": "2026-04-09"
