@@ -31,6 +31,18 @@ python3 CB_build.py && open index.html
 python3 CB_build.py && open index.html
 ```
 
+### After Claude delivers a modified shell file
+
+Always provide both of these bash blocks after delivering any updated `CB_carbonsnaps-shell.html`:
+
+```bash
+cp ~/Downloads/CB_carbonsnaps-shell.html /Users/lisaswerling/RALPH/AI/CARBONsnaps/CB_carbonsnaps-shell.html
+```
+
+```bash
+cd /Users/lisaswerling/RALPH/AI/CARBONsnaps && python3 CB_build.py && open index.html
+```
+
 ### After any local build — push to live site
 
 ```bash
@@ -204,7 +216,7 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 
 2. **Test `CB_update_stories.py --apply`** — blocked by missing API key. Once key is in `.env`, run preview first, then apply.
 
-3. **Build `CB_discover_events.py`** — web search script that surfaces new publicly-announced regulatory events not yet in the Sheet, for analyst review. Discussed 2026-03-22, not yet built.
+3. **Build `CB_discover_events.py`** — not yet built. Planned: use Anthropic API with web search tool to surface new regulatory events across all 8 instruments; deduplicate against existing REG-001 onwards; print candidates with proposed field values (title, instruments, date, direction, note) for review; on confirmation auto-assign next REG-0XX IDs and append to Google Sheet. Run ad hoc.
 
 4. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds.
 
