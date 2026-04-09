@@ -340,6 +340,10 @@ shell = re.sub(
     shell
 )
 
+# Stamp _meta before inlining
+data["_meta"]["generated"] = TODAY
+data["_meta"]["built_at"] = NOW
+
 # Inline data.json as a standalone script block
 data_json_str = json.dumps(data, ensure_ascii=False)
 
@@ -374,9 +378,7 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
 
 ok(f"Written: {OUTPUT_FILE} ({os.path.getsize(OUTPUT_FILE) // 1024} KB)")
 
-# Stamp _meta in data.json
-data["_meta"]["generated"] = TODAY
-data["_meta"]["built_at"] = NOW
+# Write updated data.json (with stamped _meta)
 with open(DATA_FILE, "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2, ensure_ascii=False)
 ok(f"Stamped _meta.generated = {TODAY} in data.json")
