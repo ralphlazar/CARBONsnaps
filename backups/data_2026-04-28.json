@@ -8,7 +8,7 @@
       "weekly": "Update weekly — price consensus, regulatory signals, stories",
       "structural": "Update on major regulatory decision or market structure change"
     },
-    "built_at": "2026-04-28 11:08"
+    "built_at": "2026-04-28 11:15"
   },
   "instruments": [
     {
@@ -3528,8 +3528,8 @@
         "analyst_note": "The LRF increase from 2.2% to 4.3% is already law and in effect. The structural case for EUA is intact: the cap tightens faster, fewer allowances exist each year, and covered sectors have limited short-run abatement options. This is the floor beneath any bullish EUA thesis.",
         "source_label": "European Parliament & Council, Directive (EU) 2023/959, 10 May 2023",
         "source_url": "https://eur-lex.europa.eu/eli/dir/2023/959/oj/eng",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -3582,8 +3582,8 @@
         "analyst_note": "This is already in effect. The 2024 amendments took full effect July 2025 with a 9% step-change in CI benchmark, turning the credit bank from net surplus to net deficit in Q3 2025. CARB projects credit prices recovering toward $100 to $200 per credit. The structural oversupply that depressed prices since 2022 is unwinding. The re-adoption is the single most important near-term driver of LCFS price recovery.",
         "source_label": "CARB, Low Carbon Fuel Standard Regulation Amendment, Board approved 8 November 2024; OAL effective July 2025",
         "source_url": "https://ww2.arb.ca.gov/our-work/programs/low-carbon-fuel-standard/about",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -3637,8 +3637,8 @@
         "analyst_note": "The 45Z credit is live but the lifecycle methodology guidance for key fuel pathways, including sustainable aviation fuel and hydrogen, remains interim. Final IRS guidance will determine which feedstocks qualify at which credit values. Uncertainty is currently depressing investment in some pathways. Resolution is bullish for producers with qualifying fuels. Confidence is High on the credit existing; Medium on the specific pathway values.",
         "source_label": "IRS/Treasury, Notice 2025-10 and Notice 2025-11, Section 45Z Clean Fuel Production Credit Guidance, 10 January 2025",
         "source_url": "https://www.irs.gov/credits-deductions/clean-fuel-production-credit",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -3694,8 +3694,8 @@
         "analyst_note": "CBAM is live in its financial phase from January 2026, but the free allocation phase-out for covered sectors is gradual (2.5% reduction in 2026). Near-term impact on EUA demand is limited. The structural bullish read is for 2028 and beyond, when free allocation reductions accelerate and CBAM certificate demand builds. For now it is more signal than substance.",
         "source_label": "European Parliament & Council, Regulation (EU) 2023/956 establishing CBAM, 10 May 2023",
         "source_url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:32023R0956",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -3748,8 +3748,8 @@
         "analyst_note": "Effective demand increase of ~30% on the maritime surrender tranche vs 2025. Watch verified emissions data vs allowances surrendered — any shortfall triggers cancellation from the auction calendar.",
         "source_label": "European Commission Climate Action",
         "source_url": "https://climate.ec.europa.eu",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -3802,8 +3802,8 @@
         "analyst_note": "The phase-out is already law and running. The 2.5% reduction in 2026 is modest in isolation but the trajectory is steep — by 2030 nearly half of current free allocation to these sectors will have been withdrawn. Watch annual verified emissions data from CBAM sectors to gauge how quickly the net demand effect compounds.",
         "source_label": "ICAP / European Commission",
         "source_url": "https://icapcarbonaction.com",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -3856,8 +3856,8 @@
         "analyst_note": "ETS2 is a separate market, not fungible with EUA. Its launch does not directly affect EUA supply or demand. We flag it as Neutral for EUA precisely because the two systems are ring-fenced. Watch for political pressure to merge or coordinate them post-2030, which would be a material structural change.",
         "source_label": "European Parliament & Council, Directive (EU) 2023/959, Chapter IVa (ETS2), 10 May 2023",
         "source_url": "https://eur-lex.europa.eu/eli/dir/2023/959/oj/eng",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -3910,8 +3910,8 @@
         "analyst_note": "93 states are participating. Airline obligations accrue through 2026 and must be settled with eligible emissions units. Demand is real but modest in Phase 1 given the COVID-adjusted baseline. The more important read is on Phase 2 (2027-2035) where obligations grow substantially. Phase 1 is the demand foundation; Phase 2 is the price catalyst.",
         "source_label": "ICAO, Annex 16 Volume IV (CORSIA SARPs) 2nd Edition, effective 1 January 2024; Assembly Resolution A41-22, October 2022",
         "source_url": "https://www.icao.int/CORSIA/sarps-annex-16-volume-iv",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -3964,8 +3964,8 @@
         "analyst_note": "Structural demand anchor for UKA pricing as CBAM aligns import carbon costs with the domestic ETS price. Creates medium-term ceiling on free allocation phase-down speed and supports UKA floor.",
         "source_label": "UK Government Finance Bill 2025-26 / HMRC",
         "source_url": "https://www.gov.uk",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4018,8 +4018,8 @@
         "analyst_note": "New demand sector entering UK ETS from 2028. The voluntary monitoring phase now running is generating the verified emissions baseline that will determine the size of the demand increase. Watch monitoring data publications from the UK ETS Authority for early indicators of sector-wide emission volumes.",
         "source_label": "Norton Rose Fulbright / ICAP",
         "source_url": "https://icapcarbonaction.com",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4072,8 +4072,8 @@
         "analyst_note": "The CCA auction reserve price is adjusted mechanically each year: 5% plus inflation. The 2026 floor is approximately $20.72 per tonne. This is a structural feature, not an event with an uncertain outcome. Confidence is High because the formula is codified and CARB has never deviated from it. It provides a hard price floor that CCA cannot trade through in the primary market, anchoring the secondary market and limiting downside risk for holders.",
         "source_label": "CARB, 2026 Annual Auction Reserve Price Notice (Cap-and-Trade Regulation, Appendix C), December 2025",
         "source_url": "https://ww2.arb.ca.gov/our-work/programs/cap-and-trade-program/auction-information",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4126,8 +4126,8 @@
         "analyst_note": "New demand entrants from mid-2026. Double-surrender in year one means the financial impact is deferred but certain — watch onboarding volumes for Q3 UKA auction demand signal.",
         "source_label": "UK ETS Authority / GOV.UK",
         "source_url": "https://www.gov.uk/government/publications/uk-emissions-trading-scheme-uk-ets-policy-overview/uk-emissions-trading-scheme-uk-ets-a-policy-overview",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4180,8 +4180,8 @@
         "analyst_note": "Consultation close on 4 May is a soft catalyst — direction of stakeholder submissions informs the July proposal above. Watch for industry positions on scope expansion and removal crediting.",
         "source_label": "European Commission / carbongap.org tracker",
         "source_url": "https://tracker.carbongap.org/policy/eu-emissions-trading-system/",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4234,8 +4234,8 @@
         "analyst_note": "A hard price floor rise of this magnitude is a direct bullish signal for UKA. From 2027 the ARP increases annually in line with GDP Deflator, locking in real-terms escalation.",
         "source_label": "UK ETS Authority / GOV.UK",
         "source_url": "https://www.gov.uk/government/publications/uk-emissions-trading-scheme-uk-ets-policy-overview/uk-emissions-trading-scheme-uk-ets-a-policy-overview",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4288,8 +4288,8 @@
         "analyst_note": "Tightening CI benchmarks will erode the existing credit bank over 2026. The pace of erosion determines whether the AAM triggers in 2027 — a further tightening catalyst. Watch quarterly CARB credit balance reports for bank drawdown trajectory. CA-GREET 4.0 transition affects which fuel pathways qualify for credit generation and may reduce supply from some existing projects.",
         "source_label": "Trinity Consultants / IETA",
         "source_url": "https://www.ieta.org",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4343,8 +4343,8 @@
         "analyst_note": "Article 6.4 has been in negotiation since Paris. COP31 in Brazil (November 2026) is the target for supervisory body rulebook finalisation. Progress is genuine but slow: methodology standards and corresponding adjustment requirements remain contentious. A finalised rulebook would create a new class of internationally recognised credits that could significantly expand demand for high-quality VCM projects. We see this as the long-run structural driver for premium VCM credit prices.",
         "source_label": "UNFCCC Article 6.4 Supervisory Body; COP29 Decision on Article 6.4 Mechanism Standards, November 2024",
         "source_url": "https://unfccc.int/process-and-meetings/bodies/constituted-bodies/article-64-supervisory-body",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4400,8 +4400,8 @@
         "analyst_note": "The UK government's stated trajectory is tighter caps and a potential carbon price floor, aligned with net zero commitments. A price floor would be structurally bullish, removing UKA downside risk analogous to the CCA auction reserve price. Confidence is Medium because the consultation is ongoing and the timeline has slipped before.",
         "source_label": "UK ETS Authority (DESNZ), UK ETS Policy Overview; Net Zero Cap effective January 2024",
         "source_url": "https://www.gov.uk/government/publications/uk-emissions-trading-scheme-uk-ets-policy-overview/uk-emissions-trading-scheme-uk-ets-a-policy-overview",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4455,8 +4455,8 @@
         "analyst_note": "ICAO's review of approved standards is ongoing. Any tightening of quality criteria would reduce eligible supply and lift EEU prices. Any expansion of approved programmes increases supply. We read the direction of travel as toward tighter quality criteria given broader VCM credibility pressures, but the timeline and scope are uncertain. Bullish read is conditional on a tightening outcome.",
         "source_label": "ICAO Council, CORSIA Eligible Emissions Units Document (updated October 2025); TAB 2024 assessment cycle",
         "source_url": "https://www.icao.int/environmental-protection/CORSIA/Pages/default.aspx",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4512,8 +4512,8 @@
         "analyst_note": "The 2023 investigative reporting on REDD+ additionality failures triggered a significant credibility crisis for nature-based VCM credits. Verra's revised VM0007 and related standards are expected to materially tighten additionality and leakage requirements. This is bearish for issuance volumes of existing REDD+ projects and likely to require re-verification. It is ultimately bullish for the long-run credibility of the VCM, but the near-term impact is supply contraction and price pressure on lower-quality credits.",
         "source_label": "Verra, VM0048 Reducing Emissions from Deforestation and Forest Degradation (VCS Program), launched 27 November 2023",
         "source_url": "https://verra.org/methodologies/vm0007-redd-methodology-framework-redd-mf-v1-8/",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4567,8 +4567,8 @@
         "analyst_note": "The political will exists on both sides but the governance complexity is real: cap-setting, mutual recognition, and regulatory alignment are all contested. A positive feasibility outcome would converge UKA and EUA prices, likely lifting UKA which currently trades at a discount. We rate confidence Medium because a feasibility study outcome is not a linking deal, and actual linking requires further legislation.",
         "source_label": "UK-EU Summit, Common Understanding on a Renewed Agenda for Cooperation (ETS linkage, Chapter IV), 19 May 2025",
         "source_url": "https://www.gov.uk/government/publications/uk-eu-summit-may-2025-common-understanding",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4624,8 +4624,8 @@
         "analyst_note": "California's Cap-and-Trade programme extension to 2045 is widely expected and has broad legislative support following AB 32 and SB 32. The key variable is the post-2030 cap trajectory and free allocation treatment. More ambitious terms would be structurally bullish for CCA. We rate confidence Medium because CARB rulemaking timelines routinely slip.",
         "source_label": "CARB, Cap-and-Invest Program Proposed Rulemaking (AB 1207/SB 840), public comment Jan-Mar 2026",
         "source_url": "https://ww2.arb.ca.gov/our-work/programs/cap-and-invest-program",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4679,8 +4679,8 @@
         "analyst_note": "Outcome is binary and high-impact: a negative CORSIA assessment could trigger EU ETS extension to extra-European departures, materially increasing aviation demand for EUAs. A positive assessment preserves the status quo. Commission report timing (mid-2026) is the near-term catalyst to watch.",
         "source_label": "Normec Verifavia / White & Case / ICAP",
         "source_url": "https://icapcarbonaction.com",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4736,8 +4736,8 @@
         "analyst_note": "EPA RVO-setting is the primary demand driver for D4, D5, and D6 RINs. Higher RVOs directly increase obligated party demand. The current administration's posture toward biofuels mandates will be the key variable. Small Refinery Exemption decisions can materially reduce effective demand even when headline RVOs are high. We flag this as the single most important near-term regulatory event for RIN prices.",
         "source_label": "US EPA, Proposed Rule: RFS Standards for 2026 and 2027, 90 Fed. Reg. 25786, 17 June 2025",
         "source_url": "https://www.federalregister.gov/documents/2025/06/17/2025-11128/renewable-fuel-standard-rfs-program-standards-for-2026-and-2027-partial-waiver-of-2025-cellulosic",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4790,8 +4790,8 @@
         "analyst_note": "The Commission consultation closed July 2025 and a legislative proposal is expected by July 2026. Most stakeholders and the European Parliament favour maintaining the 24% intake rate and the cancellation mechanism. A loosening is politically unlikely given the Clean Industrial Deal narrative. We read the base case as no net change to MSR tightness, with upside risk from additional cancellation provisions.",
         "source_label": "European Parliament & Council, Decision (EU) 2023/852 amending Decision 2015/1814 (MSR), 19 April 2023",
         "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023D0852",
-        "date_last_reviewed": "2026-03-18",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4844,8 +4844,8 @@
         "analyst_note": "Biggest structural uncertainty for EUA pricing beyond 2030. Scope of carbon removals inclusion and whether aviation free allocation phase-out timeline is hardened are the key variables to watch.",
         "source_label": "European Parliament Think Tank / EPRS",
         "source_url": "https://www.europarl.europa.eu/thinktank/en/document/EPRS_BRI(2026)782615",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4899,8 +4899,8 @@
         "analyst_note": "The single most structurally important medium-term event for UKA pricing. Convergence with EUA price is the implied outcome of a successful link — UKA currently trades at a material discount. Watch for technical design milestones and any public signals on timeline from either side.",
         "source_label": "ICAP / ClearBlue Markets",
         "source_url": "https://icapcarbonaction.com",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -4956,8 +4956,8 @@
         "analyst_note": "Near-term bullish price dynamic. Any shortfall vs verified emissions amplifies spot buying. Monitor EU registry data on verified emissions vs outstanding positions into April.",
         "source_label": "European Commission Climate Action",
         "source_url": "https://climate.ec.europa.eu",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -5011,8 +5011,8 @@
         "analyst_note": "Article 6.4 supervisory body progress is the key variable — specifically whether the centralised mechanism begins issuing A6.4ERs at scale in time to influence the CORSIA-eligible supply pool. Bilateral Article 6.2 pipeline is already moving but quality and additionality of ITMOs remains contested. COP31 outcome will either accelerate or further delay the operationalisation timeline that VCM and CORSIA pricing depends on.",
         "source_label": "UNFCCC",
         "source_url": "https://unfccc.int",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -5068,8 +5068,8 @@
         "analyst_note": "Hard statutory deadline creates a defined catalyst. Waste incineration inclusion and negative emissions accounting are the variables with the most direct price read-across. CCU double-counting clarification could affect industrial sector compliance costs. Low probability of major structural surprise but watch for scope signals on waste and negative emissions.",
         "source_label": "ICAP ETS factsheet",
         "source_url": "https://icapcarbonaction.com",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -5122,8 +5122,8 @@
         "analyst_note": "Transition from Phase 1 to Phase 2 introduces uncertainty around baseline recalculation and eligible unit criteria for the new phase. Supply crunch in CORSIA-eligible credits is already visible — the pool of qualifying project vintages is constrained relative to projected Phase 1 offsetting demand. Watch ICAO Technical Advisory Body outputs on Phase 2 methodology and any changes to eligible fuels criteria.",
         "source_label": "cCarbon / ICAO",
         "source_url": "https://www.icao.int/environmental-protection/CORSIA",
-        "date_last_reviewed": "2026-03-19",
-        "is_stale": true,
+        "date_last_reviewed": "2026-04-28",
+        "is_stale": false,
         "scenarios": [
           {
             "case": "base",
@@ -5161,38 +5161,7 @@
       }
     ],
     "last_synced": "2026-04-28",
-    "stale_warnings": [
-      "REG-001",
-      "REG-002",
-      "REG-003",
-      "REG-004",
-      "REG-005",
-      "REG-006",
-      "REG-007",
-      "REG-008",
-      "REG-009",
-      "REG-010",
-      "REG-011",
-      "REG-012",
-      "REG-013",
-      "REG-014",
-      "REG-015",
-      "REG-016",
-      "REG-017",
-      "REG-018",
-      "REG-019",
-      "REG-020",
-      "REG-021",
-      "REG-022",
-      "REG-023",
-      "REG-024",
-      "REG-025",
-      "REG-026",
-      "REG-027",
-      "REG-028",
-      "REG-029",
-      "REG-030"
-    ],
+    "stale_warnings": [],
     "total_events": 30,
     "changelog": {
       "generated": "2026-04-28",
