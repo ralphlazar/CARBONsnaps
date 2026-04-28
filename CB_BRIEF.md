@@ -2,12 +2,14 @@
 
 ---
 
-## Build workflow (current — updated 2026-03-22)
+## Build workflow (current — updated 2026-04-09)
 
-### Standard full refresh (new events added, content changed)
+### Standard full refresh (weekly ritual — includes price update)
 
 ```bash
-cd ~/Downloads/CARBONsnaps
+cd /Users/lisaswerling/RALPH/AI/CARBONsnaps
+python3 CB_fetch_market_data.py --apply
+python3 CB_sync_sheet.py --apply
 python3 CB_diff.py --apply
 python3 CB_sync_regulatory.py --apply
 python3 CB_update_scenarios.py --apply --stale-only
@@ -15,10 +17,17 @@ python3 CB_update_stories.py --apply
 python3 CB_build.py && open index.html
 ```
 
+**Important ordering rules:**
+- `CB_fetch_market_data.py` must run before `CB_sync_sheet.py`
+- `CB_sync_sheet.py` must run before `CB_update_stories.py` (price change triggers `value_at_generation` mismatch guard — stories resolves it)
+- `CB_update_stories.py` must run before `CB_build.py` when prices have changed
+
 ### Cost-free rebuild (no new events, no content changes)
 
 ```bash
-cd ~/Downloads/CARBONsnaps
+cd /Users/lisaswerling/RALPH/AI/CARBONsnaps
+python3 CB_fetch_market_data.py --apply
+python3 CB_sync_sheet.py --apply
 python3 CB_diff.py --apply
 python3 CB_sync_regulatory.py --apply
 python3 CB_update_stories.py --apply
@@ -46,7 +55,7 @@ cd /Users/lisaswerling/RALPH/AI/CARBONsnaps && python3 CB_build.py && open index
 ### After any local build — push to live site
 
 ```bash
-git add -A && git commit -m "daily refresh $(date +%Y-%m-%d)" && git push
+git add -A && git commit -m "weekly refresh $(date +%Y-%m-%d)" && git push
 ```
 
 Cloudflare Pages auto-deploys within ~1 minute of push.
@@ -55,11 +64,13 @@ Cloudflare Pages auto-deploys within ~1 minute of push.
 
 | Script | Run when |
 |---|---|
-| `CB_diff.py --apply` | Every build — always first in sequence |
+| `CB_fetch_market_data.py --apply` | Every ritual — fetches EUA prices from yfinance → Google Sheet |
+| `CB_sync_sheet.py --apply` | Every ritual — Sheet price history → CB_data.json (price, change_1w/1m/3m, spark, last_updated) |
+| `CB_diff.py --apply` | Every build — always first in regulatory sequence |
 | `CB_sync_regulatory.py --apply` | Events tab in Sheet has changed |
 | `CB_update_scenarios.py --apply --stale-only` | New events added, or content changed materially |
 | `CB_update_scenarios.py --apply --force` | Full regeneration — new project, major content overhaul |
-| `CB_update_stories.py --apply` | Every build — regenerates instrument stories and global cards |
+| `CB_update_stories.py --apply` | Every build — regenerates instrument stories and global cards; must run after CB_sync_sheet.py when prices changed |
 | `CB_build.py` | Any time — rebuilds index.html from current data.json and shell |
 
 ### `--stale-only` flag behaviour
@@ -74,10 +85,10 @@ An event's scenarios are regenerated if ANY of:
 
 - ~$0.10 per event scenario generated
 - 30 events × $0.10 = ~$3.00 for a full forced regeneration
-- Daily `--stale-only` builds: $0.00 if no content has changed
-- `CB_update_stories.py --apply`: ~$0.10–0.20/day (8 instrument stories + 3 global cards, ~9 API calls)
+- Weekly `--stale-only` builds: $0.00 if no content has changed
+- `CB_update_stories.py --apply`: ~$0.10–0.20/run (8 instrument stories + 3 global cards, ~9 API calls)
 
-### Build output confirmed working (2026-03-22)
+### Build output confirmed working (2026-04-09)
 
 ```
 Instruments      : 8/8
@@ -94,7 +105,34 @@ Known warnings (non-blocking, expected):
 
 ---
 
-## Infrastructure — current state (updated 2026-03-22)
+## Price data pipeline — current state (updated 2026-04-09)
+
+### Scripts
+
+- **`CB_fetch_market_data.py`** — fetch layer. Contacts yfinance, writes 36 months of daily closes to `PRICE-HISTORY-AUTO` tab in Google Sheet. Never reads/writes `CB_data.json`.
+- **`CB_sync_sheet.py`** — sync layer. Reads `PRICE-HISTORY-AUTO` (auto) and `PRICE-HISTORY-MANUAL` tabs, writes `price`, `change_1w`, `change_1m`, `change_3m`, `spark`, `last_updated` into `CB_data.json`. Never contacts external APIs.
+
+### Merge rule
+
+`PRICE-HISTORY-MANUAL` wins over `PRICE-HISTORY-AUTO` on the same instrument + date. Use the manual tab to correct or override any auto row.
+
+### Instruments with automated price fetch (yfinance)
+
+| Instrument | Ticker | Currency |
+|---|---|---|
+| EUA | CO2.L | GBP |
+
+### Instruments on manual price entry (PRICE-HISTORY-MANUAL tab)
+
+CCA, UKA, LCFS, VCM — updated manually in Google Sheet. CORSIA, RIN, 45Z — no price history yet.
+
+### `value_at_generation` guard
+
+`CB_sync_sheet.py` warns when a price update would cause a mismatch with `value_at_generation`. This is expected — always run `CB_update_stories.py --apply` after `CB_sync_sheet.py` and before `CB_build.py`. Build will abort if mismatch exists.
+
+---
+
+## Infrastructure — current state (updated 2026-04-09)
 
 ### Hosting
 
@@ -107,7 +145,7 @@ Known warnings (non-blocking, expected):
 
 - **Repo**: `github.com/ralphlazar/CARBONsnaps` (public)
 - **Branch**: `master`
-- **Local path**: `~/Downloads/CARBONsnaps`
+- **Local path**: `/Users/lisaswerling/RALPH/AI/CARBONsnaps`
 - **Remote**: `origin` → GitHub
 
 ### Secrets / credentials
@@ -212,102 +250,25 @@ Note on REG-023: tracked as single "negotiations active" row. Add milestone rows
 
 ## Pending items (priority order)
 
-1. **Add `ANTHROPIC_API_KEY` to `~/Desktop/.env`** — required for `CB_update_stories.py` to run. Get from [console.anthropic.com](https://console.anthropic.com). Console was down 2026-03-22 — check and add at next session.
+1. **Build `CB_discover_events.py`** — not yet built. Planned: use Anthropic API with web search tool to surface new regulatory events across all 8 instruments; deduplicate against existing REG-001 onwards; print candidates with proposed field values (title, instruments, date, direction, note) for review; on confirmation auto-assign next REG-0XX IDs and append to Google Sheet. Run ad hoc.
 
-2. **Test `CB_update_stories.py --apply`** — blocked by missing API key. Once key is in `.env`, run preview first, then apply.
+2. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds. Currently EUA is automated via yfinance (CO2.L ETF proxy); UKA has no automated feed.
 
-3. **Build `CB_discover_events.py`** — not yet built. Planned: use Anthropic API with web search tool to surface new regulatory events across all 8 instruments; deduplicate against existing REG-001 onwards; print candidates with proposed field values (title, instruments, date, direction, note) for review; on confirmation auto-assign next REG-0XX IDs and append to Google Sheet. Run ad hoc.
-
-4. **Evaluate Databento Standard ($199/month)** for automated EUA + UKA price feeds.
-
-5. **Carbon markets primer** — "Carbon markets explained" section. Deferred — pocket until audience/product positioning is clearer. See also: `CB_market_relationships.html` built 2026-03-19.
+3. **Carbon markets primer** — "Carbon markets explained" section. Deferred — pocket until audience/product positioning is clearer. See also: `CB_market_relationships.html` built 2026-03-19.
 
 ---
 
-## Completed items (session 2026-03-19, original)
+## Bug fixes applied (2026-04-09)
 
-- ✅ **Price context strip** — 52-week range bar with coloured dot per instrument in the instruments table.
-- ✅ **Regulatory calendar view** — month-strip / horizontal timeline of upcoming events coloured by direction.
-- ✅ **Strip three-level expertise toggle** — fully removed. App is expert-only.
-- ✅ **Weather icons replaced with direction badges** — instruments table uses Bullish / Bearish / Mixed / Neutral badges throughout.
-- ✅ **Decouple `DATA` from HTML build** — shell fetches `data.json` at runtime via `fetch('data.json')`.
-- ✅ **Market relationships / linkage section** — interactive network diagram (`CB_market_relationships.html`). 9 nodes, 10 typed edges, click-to-highlight, per-instrument detail panel.
+### `CB_build.py` — `_meta.generated` date was always one day stale
 
-## Completed items (session 2026-03-19, continued)
+**Root cause**: `CB_build.py` stamped `_meta.generated = TODAY` in `CB_data.json` *after* the data had already been serialised and inlined into `index.html`. The HTML always contained yesterday's date.
 
-- ✅ **Regulatory tracker date display** — all dates converted to concrete calendar start-of-period in the table. `~` prefix + italic for estimated (Q/H/month-only) formats. Urgency colour tiers. Relative countdown label (`in 12d`, `in 3mo`). `parseSortDate` fixed for `DD/MM/YYYY`.
-- ✅ **Regulatory tooltip date sub-header** — detailed date metadata row inside the event detail tooltip, with estimated vs concrete vs ongoing variants.
-- ✅ **Global story tooltips — headline** — tooltip title now shows `card.headline` from data (populated from `label` field). Fallback to `BRIEF_LABELS[idx]` if absent.
-- ✅ **Global story tooltips — paragraph breaks** — body text split on sentence boundaries into `<p>` tags for readability. Scroll reset to top on every open.
-- ✅ **Expertise level system fully purged** — `currentLevel` variable removed. `globalStories` restructured from `{beginner, moderate, expert}` to `{cards}`. All three files updated: `CB_data.json`, `CB_build.py`, `CB_carbonsnaps-shell.html`. `CB_build.py` now validates `globalStories.cards` and requires `headline` field on each card.
-- ✅ **`globalStories.cards` — `headline` field added** — promoted from `label` in `CB_data.json`. All 3 expert cards updated. `CB_build.py` enforces `headline` as required field.
-- ✅ **Glossary tooltips — hover on pointer devices** — replaced click-to-open with hover popover (150ms show delay, 200ms hide grace, positioned near term, flips above/below viewport). Touch devices retain click + centred modal + overlay. Detected via `window.matchMedia('(hover: hover) and (pointer: fine)')`.
-- ✅ **Instrument tooltips — direction badge** — weather icon replaced with `Bullish / Bearish / Mixed / Neutral` badge, consistent with instruments table and regulatory tracker.
-- ✅ **Instrument tooltips — paragraph breaks** — story text split via `splitBody()` into `<p>` tags. Scroll reset on open.
-
-## Completed items (session 2026-03-19, this session)
-
-- ✅ **Cite tag scrubbing** — `CB_update_scenarios.py` now strips `<cite>` tags from API responses before writing to `CB_data.json`. `re` module moved to top-level imports. `CB_scrub_citetags.py` one-off script written to clean existing stored scenarios.
-- ✅ **Em-dash ban enforced in scenarios** — `CB_update_scenarios.py` replaces `—` with `, ` and `–` with `-` after cite tag strip, before JSON parse.
-- ✅ **Changelog feature built** — `CB_diff.py` diffs current events against `last_state.json`, writes `changelog.json`. `CB_build.py` ingests `changelog.json` and bakes into `DATA.regulatory.changelog`. Shell renders gold collapsible banner above tracker showing changes this week, significance pills, from/to values. Clicking any entry opens event detail tooltip. Gold dot appears on updated rows in table and mobile cards. First run writes snapshot silently with no flood of entries.
-- ✅ **Source attribution on global stories** — `bt-source` restyled to readable body font with separator line and `↗ Source:` prefix label.
-- ✅ **Scenario confidence/magnitude display** — `Conf` and `Magnitude` tags rendered below "Scenarios" section label in event detail tooltip. Colour-coded green/gold/red by level. Only shown if fields present on event.
-- ✅ **Deep-linking to events** — `?event=REG-017` in URL opens event detail tooltip on page load. URL updates on open, clears on close. Works on GitHub Pages (query param, not hash route).
-- ✅ **Next 30 days strip** — compact digest of imminent events above the regulatory tracker. Same width as tracker (`max-width: 660px`). Red dot header, rows show date (red ≤14d, gold 15-30d), relative label, title, instruments, direction badge. Clicking row opens event detail tooltip. Absent when nothing in window.
-- ✅ **Weather icon system fully removed** — `.wh-icon` CSS block removed. `sigEmoji()` and `emojiSignal()` functions removed. `signalToDir()` simplified: passes through direction words directly, retains legacy weather string map as silent fallback only. `_iconMap` removed from digest builder. `card.icon` removed from digest output.
-- ✅ **Email digest (Substack)** — `Digest` button in Regulatory Tracker section header generates formatted plain-text weekly digest: this week's stories, changelog entries, next 30 days events. "Copy for Substack" button copies to clipboard. **Localhost-only**: button hidden on live site.
-
-## Completed items (session 2026-03-20)
-
-- ✅ **Git repo initialised** — `~/Downloads/CARBONsnaps` initialised, history clean of all secrets.
-- ✅ **API key secured** — old Anthropic key revoked. New key stored in `~/Desktop/.env`. `CB_update_scenarios.py` updated to read from `Path.home() / "Desktop" / ".env"`.
-- ✅ **Google credentials secured** — `CB_market-stats-key.json` added to `.gitignore`. Scrubbed from git history via `filter-branch`.
-- ✅ **GitHub repo live** — `github.com/ralphlazar/CARBONsnaps`, public, master branch.
-- ✅ **Cloudflare Pages hosting** — site live at `carbonsnaps.com` and `www.carbonsnaps.com`. Auto-deploys on push.
-- ✅ **Password gate** — `croc` / `Croc`, implemented in `CB_carbonsnaps-shell.html` so it survives rebuilds.
-- ✅ **Subscribe button** — in top bar, links to `carbonsnaps.substack.com`.
-- ✅ **Google Cloud project created** — project `CARBONsnaps`, Sheets API enabled, service account `carbonsnaps-sheets` created, key downloaded, sheet shared with service account.
-- ✅ **Substack account and publication** — account `ralphlazar`, publication CARBONsnaps at `carbonsnaps.substack.com`.
-- ✅ **First Substack post published** — "CARBONsnaps — 20 March 2026", 2026-03-20.
-- ✅ **Daily refresh ritual confirmed working** — all four scripts ran cleanly, site rebuilt and pushed.
-- ✅ **Digest — rich-text clipboard copy** — "Copy for Substack" now writes `ClipboardItem` with both `text/html` and `text/plain`. Substack editor picks up HTML on paste. Falls back to plain text silently on unsupported browsers.
-- ✅ **Digest — glossary hyperlinks** — `buildDigestHtml()` runs story bodies and event summaries through `linkifyDigest()`, which wraps first-occurrence glossary terms in `<a href="https://carbonsnaps.com/#gloss-{slug}">`. Titles/headlines left as plain text.
-- ✅ **Glossary deep-link** — `glossSlug(term)` generates stable hash fragments (`eu-ets` → `#gloss-eu-ets`). `handleGlossHash()` fires on page load and `hashchange`, finds matching `GLOSSARY_TERMS` entry, opens centred modal. Wired into `init()` alongside existing `?event=` deep-link.
-- ✅ **Glossary modal — null-anchor fix** — `openGlossTooltip(term, null)` now correctly opens centred modal on desktop (hover) devices. Previously the hover media query (`top:0;left:0;transform:none`) clobbered modal positioning. Fix: inline styles `top:50%;left:50%;transform:translate(-50%,-50%)` written explicitly in the modal branch, overriding the media query.
-
-## Completed items (session 2026-03-22)
-
-- ✅ **Instrument filter removed** — single click on instrument row now opens instrument detail tooltip (restored original behaviour). Filter logic (`setInstrumentFilter`, `activeInstrumentFilter`, filter badge, filter CSS classes) fully removed from `CB_carbonsnaps-shell.html`. Next 30 days strip always shows all events unfiltered. Decision: filter was undiscoverable and broke tooltip access; Option C (dedicated filter bar above tracker) deferred as future feature.
-- ✅ **`CB_update_stories.py` built** — new daily script regenerates all instrument tooltip stories (`story.expert` field, all 8 instruments) and all 3 global story cards (`globalStories.cards`) via Anthropic API. Reads current price, change percentages, regulatory signal, and relevant upcoming events per instrument. Uses Claude claude-opus-4-5. Writes back to `CB_data.json`. Preview mode (no `--apply`) calls API but does not write. Cost ~$0.10-0.20/day.
-- ✅ **Stray `.env` deleted** — `~/Downloads/CARBONsnaps/.env` deleted. Only canonical `.env` is `~/Desktop/.env`.
-
-## Completed items (session 2026-03-23)
-
-- ✅ **Subscribe button label** — updated to "SUBSCRIBE TO WEEKLY MAILOUT"
-- ✅ **Mobile: subscribe button overlap fixed** — `position:absolute` overridden on mobile; button sits below header as full-width block
-- ✅ **Mobile: regulatory tooltips fixed** — card click handlers were firing before cards were in the DOM; moved to after `innerHTML` assignment
-- ✅ **"Weekly Edition" removed** — span deleted from top bar
-- ✅ **Spark chart crosshair** — hover/touch on instrument tooltip spark chart shows vertical crosshair with price and date pill; flips left/right to stay in bounds
-- ✅ **Footer nav built** — three buttons (WHAT?, HOW?, LEGALESE) each open a modal panel; closes on X or click outside
-- ✅ **Footer modal content** — WHAT? and HOW? copy written and approved; LEGALESE contains Disclaimer and Privacy sections
-
-## Session notes
-
-- Claude: never issue `cp ~/Downloads/...` commands — user copies files manually.
+**Fix**: moved the `_meta` stamp to *before* `json.dumps(data)`, so the correct date is baked into the inlined payload. The subsequent write to `CB_data.json` retains the stamp but no longer duplicates it.
 
 ---
 
-## Instruments table — current column layout (updated 2026-03-22)
-
-5 columns: **ID · Name · Price · 52W range bar · Policy price outlook badge**
-
-- Vertical dividers between all columns
-- Policy price outlook badge uses `reg-dir` CSS class
-- 52W range bar: coloured dot (family accent colour) on a track, low/52W/high labels beneath. Falls back to "no data" for CORSIA, RIN, 45Z, VCM
-- Table container: `max-width: 480px`
-- **Single click = open instrument detail tooltip.** (Filter behaviour removed 2026-03-22.)
-
-### `regulatory_signal` field
+## `regulatory_signal` field
 
 Computed mechanically by `CB_build.py` from direction values of upcoming regulatory events affecting each instrument. Valid values: `Bullish`, `Bearish`, `Mixed`, `Neutral`.
 
@@ -327,7 +288,7 @@ Computed mechanically by `CB_build.py` from direction values of upcoming regulat
         "source": "..."
       }
     ],
-    "last_updated": "2026-03-22"
+    "last_updated": "2026-04-09"
   }
 }
 ```
@@ -349,8 +310,8 @@ Cards are regenerated daily by `CB_update_stories.py --apply`. Do not manually e
   "story": {
     "expert": "..."
   },
-  "story_generated_at": "2026-03-22",
-  "value_at_generation": 62.67
+  "story_generated_at": "2026-04-09",
+  "value_at_generation": 67.66
 }
 ```
 
@@ -387,7 +348,7 @@ Gold collapsible banner above tracker: `"N changes this week · N high-significa
 
 ---
 
-## Substack / digest — current state (updated 2026-03-20)
+## Substack / digest — current state (updated 2026-04-09)
 
 ### Concept
 
@@ -401,17 +362,19 @@ Weekly digest generated from live dashboard data — stories, changelog, next 30
 
 ### Weekly publishing workflow
 
-1. `cd ~/Downloads/CARBONsnaps`
-2. Run daily refresh ritual (diff → sync → scenarios → stories → build)
+1. `cd /Users/lisaswerling/RALPH/AI/CARBONsnaps`
+2. Run full weekly ritual (fetch → sync sheet → diff → sync regulatory → scenarios → stories → build)
 3. `open index.html` — click Digest button — Copy for Substack
 4. Go to `carbonsnaps.substack.com/publish/home` → Create → Article
 5. Paste content, add title (`CARBONsnaps — DD Month YYYY`) and subtitle
 6. Publish → Everyone → Publish now
-7. `git add -A && git commit -m "daily refresh YYYY-MM-DD" && git push`
+7. `git add -A && git commit -m "weekly refresh YYYY-MM-DD" && git push`
 
 ### Digest HTML structure
 
 `buildDigestHtml()` produces: `<h1>` title, `<h2>` subtitle, `<h3>` section headers, `<h4>` story headlines, `<p>` body paragraphs. Glossary terms in body text linked to `https://carbonsnaps.com/#gloss-{slug}`. Footer links to `https://carbonsnaps.com`.
+
+Digest title date is derived from `DATA._meta.generated` (now correctly stamped at build time).
 
 ### Phase 2 — Automated send (later)
 
@@ -436,6 +399,12 @@ Substack free tier. 10% of subscription revenue when paid tiers enabled. Switch 
 Categories: instruments, markets/schemes, regulatory bodies, policy mechanisms, carbon standards, project types, integrity frameworks, lifecycle methodology, units, California legislation, market terms.
 
 Intentionally excluded: chemical symbols, AR4/AR5/AR6 (in GWP entry), RIN subcategories (in RIN/RFS entries), bare legislation citations, WTO/MFN/national treatment.
+
+---
+
+## Footer — current state (updated 2026-04-09)
+
+Footer contains: nav buttons (WHAT? / HOW? / LEGALESE), CARBONsnaps brand, build date / version meta, and "Powered by MacroSnaps" link to `https://macrosnaps.app/`. All footer text uses `var(--font-display)`, 9px, uppercase, `var(--text-lo)`. Links use `var(--green)`. Styled via `.footer-powered` class in `CB_carbonsnaps-shell.html`.
 
 ---
 
